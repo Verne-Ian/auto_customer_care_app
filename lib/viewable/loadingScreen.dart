@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:auto_customer_care_app/services/net_check.dart';
 
 class Loading extends StatefulWidget {
-  Loading({Key? key}) : super(key: key);
+  const Loading({Key? key}) : super(key: key);
 
   @override
   State<Loading> createState() => _LoadingState();
@@ -12,27 +12,36 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
-  String showMessage = 'Checking Connection';
-  late bool hasConnection;
-
-  void checkNet() async {
-    hasConnection = await NetCheck.checkConnection();
-    if (hasConnection = true) {
+  checkNet() async {
+    NetCheck.hasConnection = await NetCheck.checkConnection();
+    if (NetCheck.hasConnection = true) {
       setState(() {
-        showMessage = 'Connected';
+        NetCheck.showMessage = 'Connected';
       });
-    } else {
+    } else if(NetCheck.hasConnection = false) {
       setState(() {
-        showMessage = 'No Internet';
+        NetCheck.showMessage = 'No Internet';
       });
     }
   }
-  
-  displayWhat() async {
-    if(showMessage == 'Connected'){
 
-    }else if(showMessage == 'No Internet'){
-      return Row();
+  afterLoad(){
+    Future.delayed(const Duration(seconds: 3), () {
+        Navigator.pushReplacementNamed(context, '/home');
+      });
+  }
+
+  displayWhat(){
+    if(NetCheck.showMessage == 'Connected'){
+      afterLoad();
+    }else if(NetCheck.showMessage == 'No Internet'){
+      return Row(
+        children: [
+          IconButton(onPressed: (){
+            checkNet();
+          }, icon: const Icon(Icons.refresh))
+        ],
+      );
     }
     
   }
@@ -41,17 +50,31 @@ class _LoadingState extends State<Loading> {
   void initState(){
     super.initState();
     checkNet();
+    displayWhat();
   }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
           child: Column(
-            children: const [
-              Icon(Icons.assistant),
-              Text(''),
-              SpinKitDualRing(color: Colors.blue, size: 30.0,)
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.assistant, size: 55.0, color: Colors.white,),
+                  SizedBox(width: 5.0,),
+                  Text('Name', style: TextStyle(fontSize: 30.0, color: Colors.white))
+                ],
+              ),
+              const SizedBox(height: 20.0,),
+              const SpinKitDualRing(color: Colors.white70, size: 30.0,),
+              const SizedBox(height: 20.0,),
+              Text(NetCheck.showMessage, style: const TextStyle(fontSize: 15.0, color: Colors.white),),
+              Padding(padding: EdgeInsets.zero,
+              child: displayWhat(),)
             ],
           )),
     );

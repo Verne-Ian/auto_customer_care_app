@@ -1,8 +1,14 @@
+
+import 'package:auto_customer_care_app/viewable/loadingScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: MyApp(),
+  runApp(MaterialApp(
+    initialRoute: '/load',
+    routes: {
+      '/load': (context) => const Loading(),
+      '/home': (context) => const MyApp()
+    },
   ));
 }
 
@@ -31,7 +37,9 @@ class _MyAppState extends State<MyApp> {
         padding: EdgeInsets.fromLTRB(0, h*0.03, 0, h*0.1),
         child: Column(
           children: const [
-
+            Card(
+              color: Colors.red,
+            )
           ],
         ),
       ),
