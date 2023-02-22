@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Kelly\'s Support ',
+        title: const Text('IzoCare Support ',
         style: TextStyle(
             fontSize: 30.0,
             color: Colors.white),),

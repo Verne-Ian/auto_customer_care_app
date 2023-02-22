@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:auto_customer_care_app/services/net_check.dart';
@@ -12,34 +15,68 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
-  checkNet() async {
-    NetCheck.hasConnection = await NetCheck.checkConnection();
-    if (NetCheck.hasConnection = true) {
+  String showMessage = 'Loading...';
+
+  checkConnection() async {
+    setState(() {
+      showMessage = 'Loading...';
+    });
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          showMessage = 'Almost Done!';
+        });
+      }
+    }on SocketException catch (_) {
       setState(() {
-        NetCheck.showMessage = 'Connected';
-      });
-    } else if(NetCheck.hasConnection = false) {
-      setState(() {
-        NetCheck.showMessage = 'No Internet';
+        showMessage = 'Error! No Internet';
       });
     }
   }
 
   afterLoad(){
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 20), () {
         Navigator.pushReplacementNamed(context, '/home');
       });
   }
 
   displayWhat(){
-    if(NetCheck.showMessage == 'Connected'){
-      afterLoad();
-    }else if(NetCheck.showMessage == 'No Internet'){
+    if(showMessage == 'Almost Done!'){
+      //afterLoad();
+    }else if(showMessage == 'Error! No Internet'){
       return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton(onPressed: (){
-            checkNet();
-          }, icon: const Icon(Icons.refresh))
+          Expanded(
+            child: ElevatedButton.icon(onPressed: (){
+              checkConnection();},
+              icon: const Icon(Icons.refresh, color: Colors.white, size: 30.0,),
+              label: const Text('Reload', style: TextStyle(fontSize: 17.0),),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return Colors.white60;
+                  }
+                  return Colors.black;
+                })
+            ),),
+          ),
+          Expanded(
+            child: ElevatedButton.icon(onPressed: (){
+              SystemNavigator.pop();
+            },
+              icon: const Icon(Icons.exit_to_app_sharp, color: Colors.white, size: 30.0,),
+              label: const Text('Exit', style: TextStyle(fontSize: 17.0),),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    if (states.contains(MaterialState.pressed)) {
+                      return Colors.white60;
+                    }
+                    return Colors.black;
+                  })
+              ),),
+          )
         ],
       );
     }
@@ -49,31 +86,39 @@ class _LoadingState extends State<Loading> {
   @override
   void initState(){
     super.initState();
-    checkNet();
+    checkConnection();
     displayWhat();
   }
   
   @override
   Widget build(BuildContext context) {
+
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.assistant, size: 55.0, color: Colors.white,),
-                  SizedBox(width: 5.0,),
-                  Text('Name', style: TextStyle(fontSize: 30.0, color: Colors.white))
-                ],
+              Padding(
+                padding: EdgeInsets.only(top: h*0.3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.assistant, size: 55.0, color: Colors.white,),
+                    SizedBox(width: 5.0,),
+                    Text('IzoCare', style: TextStyle(fontSize: 30.0, color: Colors.white))
+                  ],
+                ),
               ),
               const SizedBox(height: 20.0,),
               const SpinKitDualRing(color: Colors.white70, size: 30.0,),
               const SizedBox(height: 20.0,),
-              Text(NetCheck.showMessage, style: const TextStyle(fontSize: 15.0, color: Colors.white),),
-              Padding(padding: EdgeInsets.zero,
+              Text(showMessage, style: const TextStyle(fontSize: 15.0, color: Colors.white),),
+              const SizedBox(height: 15.0,),
+              Padding(padding: EdgeInsets.fromLTRB(w*0.08, h*0.4, w*0.08, h*0.01),
               child: displayWhat(),)
             ],
           )),

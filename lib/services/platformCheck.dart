@@ -25,18 +25,4 @@ PlatformType determinePlatform() {
 
 PlatformType currentPlatform = determinePlatform();
 
-String device = '';
-
-platform(){
-  switch (currentPlatform) {
-    case PlatformType.android:
-      return device = 'Android';
-    case PlatformType.ios:
-      return device = 'ios';
-    case PlatformType.web:
-      return device = 'web';
-    case PlatformType.unknown:
-      return device = 'unknown';
-  }
-}
 

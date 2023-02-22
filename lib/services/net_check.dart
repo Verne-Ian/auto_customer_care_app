@@ -2,31 +2,23 @@
 ///mainly for the android and ios platforms.
 
 import 'dart:io';
-
 import 'platformCheck.dart';
 
-
-class NetCheck{
-
-  static String showMessage = 'Connecting';
-  static bool hasConnection = false;
-
-  static checkConnection() async {
-    showMessage = 'Checking Connection';
-    if(device == 'Android' || device == 'ios'){
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (_) {
-      return false;
+class NetCheck {
+  static String device = '';
+  platform() {
+    switch (currentPlatform) {
+      case PlatformType.android:
+        device = 'Android';
+        break;
+      case PlatformType.ios:
+        device = 'ios';
+        break;
+      case PlatformType.web:
+        device = 'web';
+        break;
+      case PlatformType.unknown:
+        device = 'unknown';
     }
-    return false;
-  }else{
-      return true;
-    }
-    }
-
+  }
 }
-
