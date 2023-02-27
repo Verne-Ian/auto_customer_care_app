@@ -7,19 +7,19 @@ void main() {
     initialRoute: '/load',
     routes: {
       '/load': (context) => const Loading(),
-      '/home': (context) => const MyApp()
+      '/home': (context) => const MyHome()
     },
   ));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyHome extends StatefulWidget {
+  const MyHome({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyHome> createState() => _MyHomeState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
