@@ -1,4 +1,3 @@
-
 import 'package:auto_customer_care_app/viewable/loadingScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -28,13 +27,14 @@ class _MyHomeState extends State<MyHome> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('IzoCare Support ',
-        style: TextStyle(
-            fontSize: 30.0,
-            color: Colors.white),),
-      centerTitle: true,),
+        title: const Text(
+          'IzoCare Support ',
+          style: TextStyle(fontSize: 30.0, color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(0, h*0.03, 0, h*0.1),
+        padding: EdgeInsets.fromLTRB(0, h * 0.03, 0, h * 0.1),
         child: Column(
           children: const [
             Card(
@@ -46,4 +46,3 @@ class _MyHomeState extends State<MyHome> {
     );
   }
 }
-
