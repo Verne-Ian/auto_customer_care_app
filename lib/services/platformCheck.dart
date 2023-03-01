@@ -1,15 +1,12 @@
-///This will check the platform on which the app is running.
+/*
+This will check the platform on which the app is running.
+*/
 
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
-enum PlatformType{
-  android,
-  ios,
-  web,
-  unknown
-}
+enum PlatformType { android, ios, web, unknown }
 
 PlatformType determinePlatform() {
   if (Platform.isAndroid) {
@@ -24,5 +21,3 @@ PlatformType determinePlatform() {
 }
 
 PlatformType currentPlatform = determinePlatform();
-
-

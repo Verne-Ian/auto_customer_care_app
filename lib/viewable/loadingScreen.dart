@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -15,7 +16,7 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
   String showMessage = 'Loading...';
-  String device = '';
+  String device = 'web';
 
   platform() {
     switch (currentPlatform) {
@@ -42,42 +43,30 @@ class _LoadingState extends State<Loading> {
   }
 
   checkConnection() async {
-    setState(() {
-      showMessage = 'Loading...';
-    });
-    if (device == 'Android') {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            showMessage = 'Almost Done!';
-          });
-        }
-      } on SocketException catch (_) {
-        setState(() {
-          showMessage = 'Error! No Internet';
-        });
-      }
-    } else if (device == 'ios') {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            showMessage = 'Almost Done!';
-          });
-        }
-      } on SocketException catch (_) {
-        setState(() {
-          showMessage = 'Error! No Internet';
-        });
-      }
-    } else {
+    if (kIsWeb) {
       afterLoad();
+    } else if (Platform.isAndroid || Platform.isIOS) {
+      setState(() {
+        showMessage = 'Loading...';
+      });
+
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            showMessage = 'Almost Done!';
+          });
+        }
+      } on SocketException catch (_) {
+        setState(() {
+          showMessage = 'Error! No Internet';
+        });
+      }
     }
   }
 
   afterLoad() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 10), () {
       Navigator.pushReplacementNamed(context, '/home');
     });
   }
@@ -143,9 +132,8 @@ class _LoadingState extends State<Loading> {
   @override
   void initState() {
     super.initState();
-    platform();
-    checkConnection();
     displayWhat();
+    checkConnection();
   }
 
   @override

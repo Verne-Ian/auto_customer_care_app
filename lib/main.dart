@@ -21,6 +21,7 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
