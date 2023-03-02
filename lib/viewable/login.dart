@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../addons/buttons&fields.dart';
 
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               otherField('Enter Password', Icons.password, true, passControl),
               loginSignUpButton(context, true, () {}),
-              GoogleSignUpButton(context, Icons.abc, true, () {})
+              GoogleSignUpButton(context, Ionicons.logo_google, true, () {})
             ],
           ),
         ),
