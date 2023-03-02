@@ -1,12 +1,10 @@
-
-
 import 'package:flutter/material.dart';
 
 ///This can be used if you want custom but similar text fields throughout the app
 ///for number or text fields.
 ///You can edit it's appearance as desired.
 TextField defaultField(String text, IconData icon, bool isDigit,
-    TextEditingController controller, String unit){
+    TextEditingController controller, String unit) {
   return TextField(
     controller: controller,
     obscureText: isDigit,
@@ -21,34 +19,33 @@ TextField defaultField(String text, IconData icon, bool isDigit,
       ),
       suffixText: unit,
       suffixStyle: const TextStyle(
-        color: Colors.white70,
-      fontWeight: FontWeight.bold,
-      fontSize: 20.0),
+          color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 20.0),
       labelText: text,
       labelStyle: const TextStyle(color: Colors.white70),
       filled: true,
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.white, width: 2)
-      ),
+          borderSide: const BorderSide(color: Colors.white, width: 2)),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
-      floatingLabelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      floatingLabelStyle:
+          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       fillColor: Colors.black.withOpacity(0.4),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30.0),
-        borderSide: BorderSide(width: 0, style: BorderStyle.solid, color: Colors.black.withOpacity(0.3))
-      ),
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.solid,
+              color: Colors.black.withOpacity(0.3))),
     ),
     keyboardType: isDigit ? TextInputType.number : TextInputType.text,
   );
-
 }
 
 ///This can be used if you want custom but similar text fields throughout the app
 ///for password or email fields.
 ///You can edit it's appearance as desired.
 TextField otherField(String text, IconData icon, bool isPassword,
-    TextEditingController controller){
+    TextEditingController controller) {
   return TextField(
     controller: controller,
     obscureText: isPassword,
@@ -66,50 +63,51 @@ TextField otherField(String text, IconData icon, bool isPassword,
       filled: true,
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.white, width: 2)
-      ),
+          borderSide: const BorderSide(color: Colors.white, width: 2)),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       floatingLabelStyle: const TextStyle(color: Colors.white),
       fillColor: Colors.black.withOpacity(0.4),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: BorderSide(width: 0, style: BorderStyle.solid, color: Colors.black.withOpacity(0.3))
-      ),
+          borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.solid,
+              color: Colors.black.withOpacity(0.3))),
     ),
-    keyboardType: isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
+    keyboardType:
+        isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
   );
-
 }
-
 
 ///This can be used if you want custom but similar login or signup buttons throughout the app.
 ///You can edit it as desired.
-Container loginSignUpButton(BuildContext context, bool isLogin, Function onTap){
+Container loginSignUpButton(
+    BuildContext context, bool isLogin, Function onTap) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
-    child: ElevatedButton(onPressed: () {onTap();},
+    child: ElevatedButton(
+      onPressed: () {
+        onTap();
+      },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states){
-          if(states.contains(MaterialState.pressed)){
-            return Colors.black26;
-          }
-          return Colors.white;
-        }),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30)
-        ))),
-    child: Text(
-      isLogin ? 'Log In' : 'Sign Up',
-      style: const TextStyle(
-        color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.black26;
+            }
+            return Colors.white;
+          }),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+      child: Text(
+        isLogin ? 'Log In' : 'Sign Up',
+        style: const TextStyle(
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
       ),
     ),
-    ),
   );
-
 }
 
 ///This can be used if you want custom but similar buttons throughout the app.
@@ -120,9 +118,10 @@ Container normalButton(BuildContext context, String text, Function onTap) {
     height: 50,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
-    child: ElevatedButton(onPressed: () {
-      onTap();
-    },
+    child: ElevatedButton(
+      onPressed: () {
+        onTap();
+      },
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
@@ -130,14 +129,49 @@ Container normalButton(BuildContext context, String text, Function onTap) {
             }
             return Colors.white;
           }),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)
-          ))),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
       child: Text(
         text,
         style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16
-        ),
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+    ),
+  );
+}
+
+// ignore: non_constant_identifier_names, non_constant_identifier_names
+///This can be used if you want custom but similar login or signup buttons throughout the app.
+///You can edit it as desired.
+Container GoogleSignUpButton(
+    BuildContext context, IconData icons, bool isGoogle, Function onTap) {
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    height: 50,
+    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
+    child: ElevatedButton.icon(
+      onPressed: () {
+        onTap();
+      },
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.black26;
+            }
+            return Colors.white;
+          }),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+      icon: Icon(
+        icons,
+        color: Colors.green,
+        size: 30.0,
+      ),
+      label: Text(
+        isGoogle ? 'Sign In With Google' : 'Sign In With Microsoft',
+        style: const TextStyle(
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
       ),
     ),
   );
