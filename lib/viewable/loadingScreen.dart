@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../services/platformCheck.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -18,31 +17,12 @@ class _LoadingState extends State<Loading> {
   String showMessage = 'Loading...';
   String device = 'web';
 
-  platform() {
-    switch (currentPlatform) {
-      case PlatformType.android:
-        setState(() {
-          device = 'Android';
-        });
-        break;
-      case PlatformType.ios:
-        setState(() {
-          device = 'ios';
-        });
-        break;
-      case PlatformType.web:
-        setState(() {
-          device = 'web';
-        });
-        break;
-      case PlatformType.unknown:
-        setState(() {
-          device = 'unknown';
-        });
-    }
-  }
-
   checkConnection() async {
+
+    setState(() {
+      showMessage = 'Loading...';
+    });
+
     if (kIsWeb) {
       afterLoad();
     } else if (Platform.isAndroid || Platform.isIOS) {
@@ -66,7 +46,7 @@ class _LoadingState extends State<Loading> {
   }
 
   afterLoad() {
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacementNamed(context, '/home');
     });
   }

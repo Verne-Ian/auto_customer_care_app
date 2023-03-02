@@ -1,12 +1,19 @@
+import 'package:auto_customer_care_app/viewable/chatpage.dart';
 import 'package:auto_customer_care_app/viewable/loadingScreen.dart';
+import 'package:auto_customer_care_app/viewable/login.dart';
+import 'package:auto_customer_care_app/viewable/signup.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    initialRoute: '/load',
+    initialRoute: '/login',
     routes: {
       '/load': (context) => const Loading(),
-      '/home': (context) => const MyHome()
+      '/home': (context) => const MyHome(),
+      '/sign': (context) => const SignUp(),
+      '/login': (context) => const LoginScreen(),
+      '/chat': (context) => const ChatScreen(),
+
     },
   ));
 }
@@ -28,18 +35,34 @@ class _MyHomeState extends State<MyHome> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.black54,
         title: const Text(
           'IzoCare Support ',
-          style: TextStyle(fontSize: 30.0, color: Colors.white),
+          style: TextStyle(fontSize: 23.0, color: Colors.white),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(0, h * 0.03, 0, h * 0.1),
+        padding: EdgeInsets.fromLTRB(w*0.01, h * 0.03, w*0.01, h * 0.1),
         child: Column(
-          children: const [
-            Card(
-              color: Colors.red,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Card(
+                    elevation: 0.0,
+                    color: Colors.red,
+                    child: Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: TextButton.icon(
+                          onPressed: (){},
+                          icon: const Icon(Icons.add, color: Colors.white, size: 30.0,),
+                          label: const Text('New Chat', style: TextStyle(color: Colors.white, fontSize: 25.0),)),
+                    ),
+                  ),
+                ),
+              ],
             )
           ],
         ),
