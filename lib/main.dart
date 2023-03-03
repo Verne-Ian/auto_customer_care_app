@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    initialRoute: '/login',
+    initialRoute: '/load',
     routes: {
       '/load': (context) => const Loading(),
       '/home': (context) => const MyHome(),

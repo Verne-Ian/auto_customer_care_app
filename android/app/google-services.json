@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1020541347977",
+    "project_id": "auto-customer-care",
+    "storage_bucket": "auto-customer-care.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020541347977:android:a2b7fac4ec0809f46ffe58",
+        "android_client_info": {
+          "package_name": "com.andy_n_special.auto_customer_care_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020541347977-7096hq33i3sg96dp3f0bhe8lncq9ebk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA579CNtNHPT7o2i490nyLkF6WmYIQ-BSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020541347977-7096hq33i3sg96dp3f0bhe8lncq9ebk9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
