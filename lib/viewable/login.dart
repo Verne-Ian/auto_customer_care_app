@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../addons/buttons&fields.dart';
+import '../services/MainServices.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController loginOption = TextEditingController();
+  TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
 
   @override
@@ -36,18 +37,47 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 12.0,
               ),
-              defaultField('Email or Phone', Icons.account_circle_outlined,
-                  false, loginOption, ''),
+              defaultField('Email', Icons.email_rounded,
+                  false, emailControl, ''),
               const SizedBox(
                 height: 12.0,
               ),
               otherField('Enter Password', Icons.password, true, passControl),
-              loginSignUpButton(context, true, () {}),
-              GoogleSignUpButton(context, Ionicons.logo_google, true, () {})
+              loginSignUpButton(context, true, (){
+                if(emailControl.text.isNotEmpty && passControl.text.isNotEmpty){
+                  Login.emailLogin(emailControl.text, passControl.text).then((value){
+                    Navigator.pushReplacementNamed(context, '/home');});
+                }else{
+
+                }
+              }),
+              GoogleSignUpButton(context, Ionicons.logo_google, true, () { Login.googleLogin().then((value){
+                Navigator.pushReplacementNamed(context, '/home');});
+              }),
+              signUpOption()
             ],
           ),
         ),
       ),
     );
   }
+
+  Row signUpOption(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('First time here?',
+            style: TextStyle(color: Colors.black)),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacementNamed(context, '/sign');
+          },
+          child: const Text('Create Account',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        )
+      ],
+    );
+
+  }
+
 }

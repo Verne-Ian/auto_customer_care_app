@@ -15,8 +15,7 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  String showMessage = 'Loading...';
-  String device = 'web';
+  String showMessage = '';
 
   checkConnection() async {
 
@@ -48,7 +47,11 @@ class _LoadingState extends State<Loading> {
 
   afterLoad() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/home');
+      if(FirebaseAuth.instance.currentUser == null){
+        Navigator.pushReplacementNamed(context, '/login');
+      }else{
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     });
   }
 
@@ -141,7 +144,7 @@ class _LoadingState extends State<Loading> {
                 SizedBox(
                   width: 5.0,
                 ),
-                Text('IzoCare',
+                Text('SpecanCare',
                     style: TextStyle(fontSize: 30.0, color: Colors.white))
               ],
             ),

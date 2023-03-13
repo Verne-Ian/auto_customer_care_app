@@ -1,4 +1,4 @@
-name: auto_customer_care_app
+name: SpecanCare
 description: This is our final year project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -39,7 +39,8 @@ dependencies:
   ionicons: ^0.2.2
   firebase_core: ^2.7.0
   firebase_auth: ^4.2.9
-  googleapis_auth: ^1.3.1
+  googleapis:
+  dialogflow_flutter: ^1.0.0
 
 dev_dependencies:
   flutter_test:
