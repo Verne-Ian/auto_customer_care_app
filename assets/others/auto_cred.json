@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "auto-customer-care",
+  "private_key_id": "610fccd62033dadbf50a75c87711dc5fe504f57d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCtkaVSYV4xkkSB\noowaayFDC8e6tCE2Zyc2Ak4JFUXmP2ls3fPDF8MI10KBPf/iE5Ir6JkHV4EaPk17\n5X69iMOvt4iYVu0Wyu+XQi3fusnBkFbxAECgBOkMLFn6/MTVdQNyVUO+yo3regGQ\n9R8ORqYuWBZftBZHau8qs0NLr1H1eJof1RY183/zTIsAgLEfdUViokeDLi1zY8WG\n8ppDOLDGMYkviED3BF7DoL7cWaTvmdCYQWhL8tHeHmUfTV9G36QirvTPgOk1YwkE\nmbTx24amdLcGMygLS6dVpQ7BIHbxn4Vsb5MTIXb69Xjvn3VN5wGeja8olb2oQ4H/\nBXkIZP+ZAgMBAAECggEAFNa0lPlSdixn2/IUdNwJnmt4x4BWr/nOxf/dF19V2PTi\nTxMvT+wniwVQK2TylrWvkiS/Ebf2bLyP8Dj/oFkeGHfWNycRmE/VV/FWwWKjVEFk\nhNMZTzUDt2XQSE9mgPPHbgfRZkPaqevIKhuZ5syB6XTDO+qK1bh/nj5vTRQPqKNG\n8oUeEXdVsfDmsAVflGhCBoSMfNV7jIL5MkdSf58DeOQpNUxxL+5fusb1KcNSkThW\n7dGAAXwvLIEE//ZuUjm+vykMQjcSedBMxfWuZXn/UfZvJ8gj6yiEoIwIVG/kRSNn\nBGk617REDHN9HUZEyX+lYvER1lmwcZtCKKmru/yW0QKBgQDx2JFXjFXPwvQNgtOK\n4qasHl+KU1/4y0AsWHC4QXpGukXCfOndSpgeJrbbUDXfGJzCn0OXNRhjYdf4c2SG\n2MGhrRrFmDcqOnb0w0PCm2Xf4KrRXJR2sJXgmPs4zN6q7reMzb2VTaumwowb7y0t\n8x1dEsaHtHlvX8Xzn2XKqfBLaQKBgQC3uh/Vyt27mYqYLjgWjv8aV2z3MWBUYxUH\nKcPFIBxuG8LomMXMVvRmOAYP83CXEq5+RGT0kMC3I4hm45JTJv0jPNTtovYGxeWd\nLPlja9fBjwDM+TQuk7v8P07NSdzGs/to92DkkiDPitF3TEgo5qnHNaNZGuPHQIRM\ncHEhaap8sQKBgQCf1LC5W1Wa6QzBoSSNNR1RwwEBOfjDRBA1Pn3ASAW3mINh9YvZ\nY+MEijFu36O6vVlchkT1OXHUvGUvHZPiSn4ti2mWDPLoRZs4R5QQmQLK4oABvV2g\n0zM6K+BbuYmvDfTgaVhRw/MdUpWmIHuLUpClYjMynGNk57a7Oyzas1TLgQKBgQCa\n3a67/VZOLaxffoYUrdBmmc7lxp8WQraU5SV54glU3t26Rhxkk99K0mp5w4/iKAMh\nt/EJHYL0XGU7pRPQN4skysAI11Zeey2DAUfuABdLtojMPjs4D5tjktGPxXTtoQSI\nhA0OXgZ+KttJnektYNE3dAUOtNXPPJjH/fe+XF0y4QKBgHrpmLAsJxjeCebsYwRf\nx5LIVXVkaB6NNIRDAzBR190Sclzup/l4F8Yj3YoM5SmJ7zgQccbQFzN+K1d0tMcv\nIGCC4dXqr8ruwf1elar5pv5iI+hScDlPOAGpHI+sPwX3oyHzwuOOsCDaSokgy0qr\nIH+SR3+mbBDnSK2pi6zYysRF\n-----END PRIVATE KEY-----\n",
+  "client_email": "auto-customer-care-agent@auto-customer-care.iam.gserviceaccount.com",
+  "client_id": "103248253317552166156",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/auto-customer-care-agent%40auto-customer-care.iam.gserviceaccount.com"
+}
