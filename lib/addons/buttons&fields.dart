@@ -180,8 +180,8 @@ Container GoogleSignUpButton(
 Container newChatButton(
     BuildContext context, IconData icons, bool isBot, Function onTap) {
   return Container(
-    width: MediaQuery.of(context).size.width * 0.5,
-    height: 80,
+    width: MediaQuery.of(context).size.width * 0.45,
+    height: 120,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
     child: ElevatedButton.icon(
@@ -193,7 +193,7 @@ Container newChatButton(
             if (states.contains(MaterialState.pressed)) {
               return Colors.black26;
             }
-            return Colors.white;
+            return Colors.white70;
           }),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),

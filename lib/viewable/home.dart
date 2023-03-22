@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../addons/buttons&fields.dart';
+import '../addons/drawer.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({Key? key}) : super(key: key);
@@ -18,8 +21,8 @@ class _MyHomeState extends State<MyHome> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: MainSideBar(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.black54,
         title: const Text(
           'SpecanCare Support ',
@@ -31,34 +34,17 @@ class _MyHomeState extends State<MyHome> {
         padding: EdgeInsets.fromLTRB(w * 0.01, h * 0.03, w * 0.01, h * 0.1),
         child: Column(
           children: [
+            Text('Welcome ${FirebaseAuth.instance.currentUser?.displayName}'),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Card(
-                    elevation: 0.0,
-                    color: Colors.red,
-                    child: Padding(
-                      padding: const EdgeInsets.all(40.0),
-                      child: TextButton.icon(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/');
-                          },
-                          icon: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          label: const Text(
-                            'New Chat',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 25.0),
-                          )),
-                    ),
-                  ),
-                ),
+                newChatButton(context, Ionicons.person, false, (){}),
+                const SizedBox(width: 10.0,),
+                newChatButton(context, Icons.live_help_rounded, true, () {})
               ],
             ),
-            newChatButton(context, Icons.radio_button_off, true, () {})
+            TextButton(onPressed: (){FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacementNamed(context, '/login'));},
+                child: const Text('Log-Out'))
           ],
         ),
       ),

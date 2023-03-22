@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text('First time here?',
-            style: TextStyle(color: Colors.black)),
+            style: TextStyle(color: Colors.white70)),
         GestureDetector(
           onTap: () {
             Navigator.pushReplacementNamed(context, '/sign');

@@ -13,6 +13,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
 
+  TextEditingController nameControl = TextEditingController();
   TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
 
@@ -36,9 +37,12 @@ class _SignUpState extends State<SignUp> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                defaultField('Preferred Name', Ionicons.person, false, nameControl, ''),
+                const SizedBox(height: 10.0,),
                 defaultField('Email', Icons.email, false, emailControl, ''),
+                const SizedBox(height: 10.0,),
                 otherField('Password', Icons.password_sharp, true, passControl),
-                loginSignUpButton(context, false, newUser.emailSignUp),
+                loginSignUpButton(context, false, () async {await newUser.emailSignUp(emailControl.text, passControl.text, nameControl.text).then((value) => Navigator.pushReplacementNamed(context, '/home'));}),
                 GoogleSignUpButton(context, Ionicons.logo_google, true, () { Login.googleLogin().then((value){
                   Navigator.pushReplacementNamed(context, '/home');});
                 }),
