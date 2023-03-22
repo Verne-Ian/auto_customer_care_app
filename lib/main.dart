@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../viewable/chatpage.dart';
 import '../viewable/home.dart';
 import '../viewable/loadingScreen.dart';
@@ -18,7 +20,6 @@ void main() async {
       '/sign': (context) => const SignUp(),
       '/login': (context) => const LoginScreen(),
       '/chat': (context) => const ChatScreen(),
-
     },
   ));
 }

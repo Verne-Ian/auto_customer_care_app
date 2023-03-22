@@ -176,3 +176,37 @@ Container GoogleSignUpButton(
     ),
   );
 }
+
+Container newChatButton(
+    BuildContext context, IconData icons, bool isBot, Function onTap) {
+  return Container(
+    width: MediaQuery.of(context).size.width * 0.5,
+    height: 80,
+    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
+    child: ElevatedButton.icon(
+      onPressed: () {
+        onTap();
+      },
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.black26;
+            }
+            return Colors.white;
+          }),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+      icon: Icon(
+        icons,
+        color: Colors.green,
+        size: 30.0,
+      ),
+      label: Text(
+        isBot ? 'Quick Help' : 'Personalised Help',
+        style: const TextStyle(
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+    ),
+  );
+}

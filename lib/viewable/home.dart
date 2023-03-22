@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../addons/buttons&fields.dart';
+
 class MyHome extends StatefulWidget {
   const MyHome({Key? key}) : super(key: key);
 
@@ -26,7 +28,7 @@ class _MyHomeState extends State<MyHome> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(w*0.01, h * 0.03, w*0.01, h * 0.1),
+        padding: EdgeInsets.fromLTRB(w * 0.01, h * 0.03, w * 0.01, h * 0.1),
         child: Column(
           children: [
             Row(
@@ -38,16 +40,25 @@ class _MyHomeState extends State<MyHome> {
                     child: Padding(
                       padding: const EdgeInsets.all(40.0),
                       child: TextButton.icon(
-                          onPressed: (){
+                          onPressed: () {
                             Navigator.pushReplacementNamed(context, '/');
                           },
-                          icon: const Icon(Icons.add, color: Colors.white, size: 30.0,),
-                          label: const Text('New Chat', style: TextStyle(color: Colors.white, fontSize: 25.0),)),
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 30.0,
+                          ),
+                          label: const Text(
+                            'New Chat',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 25.0),
+                          )),
                     ),
                   ),
                 ),
               ],
-            )
+            ),
+            newChatButton(context, Icons.radio_button_off, true, () {})
           ],
         ),
       ),
