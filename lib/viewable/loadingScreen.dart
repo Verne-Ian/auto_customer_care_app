@@ -46,7 +46,7 @@ class _LoadingState extends State<Loading> {
   }
 
   afterLoad() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 600), () {
       if(FirebaseAuth.instance.currentUser == null){
         Navigator.pushReplacementNamed(context, '/login');
       }else{
@@ -124,8 +124,10 @@ class _LoadingState extends State<Loading> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+    double textSize = w*0.025;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
       body: SafeArea(
           child: Column(
@@ -135,17 +137,17 @@ class _LoadingState extends State<Loading> {
             padding: EdgeInsets.only(top: h * 0.3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(
                   Icons.assistant,
-                  size: 55.0,
+                  size: h*0.09,
                   color: Colors.white,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5.0,
                 ),
                 Text('SpecanCare',
-                    style: TextStyle(fontSize: 30.0, color: Colors.white))
+                    style: TextStyle(fontSize: w*0.07, color: Colors.white))
               ],
             ),
           ),
@@ -161,13 +163,13 @@ class _LoadingState extends State<Loading> {
           ),
           Text(
             showMessage,
-            style: const TextStyle(fontSize: 15.0, color: Colors.white),
+            style: TextStyle(fontSize: textSize, color: Colors.white),
           ),
           const SizedBox(
             height: 15.0,
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(w * 0.08, h * 0.4, w * 0.08, h * 0.01),
+            padding: EdgeInsets.fromLTRB(w * 0.08, h * 0.3, w * 0.08, h * 0.01),
             child: displayWhat(),
           )
         ],

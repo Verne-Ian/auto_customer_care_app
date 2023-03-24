@@ -26,7 +26,7 @@ class _MyHomeState extends State<MyHome> {
         backgroundColor: Colors.black54,
         title: const Text(
           'SpecanCare Support ',
-          style: TextStyle(fontSize: 23.0, color: Colors.white),
+          style: TextStyle(fontSize: 20.0, color: Colors.white),
         ),
         centerTitle: true,
       ),

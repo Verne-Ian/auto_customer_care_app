@@ -205,7 +205,7 @@ Container newChatButton(
       label: Text(
         isBot ? 'Quick Help' : 'Personalised Help',
         style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
       ),
     ),
   );

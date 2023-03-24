@@ -24,6 +24,7 @@ class _MainSideBarState extends State<MainSideBar> {
             decoration: const BoxDecoration(color: Colors.black),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(child: Image.network('${FirebaseAuth.instance.currentUser?.photoURL}',
+                scale: 2.0,
                 fit: BoxFit.cover,
                 width: 90,
                 height: 60,)),

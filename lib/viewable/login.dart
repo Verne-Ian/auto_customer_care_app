@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(w * 0.03, h * 0.0, w * 0.03, 0.0),
+          padding: EdgeInsets.fromLTRB(w * 0.03, h * 0.2, w * 0.03, 0.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
