@@ -24,42 +24,40 @@ class _MainSideBarState extends State<MainSideBar> {
             decoration: const BoxDecoration(color: Colors.black),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(child: Image.network('${FirebaseAuth.instance.currentUser?.photoURL}',
-                scale: 2.0,
+                scale: 1.0,
                 fit: BoxFit.cover,
-                width: 90,
-                height: 60,)),
+                width: 100,
+                height: 70,)),
             ),
               accountName: Text('${FirebaseAuth.instance.currentUser?.displayName}'),
               accountEmail: Text('${FirebaseAuth.instance.currentUser?.email}'),
             ),
           const ListTile(
             leading: Icon(Icons.feedback,
-              size: 20.0,),
+              size: 40.0,),
             title: Text('Support',
               style: TextStyle(
-                  fontSize: 15.0
+                  fontSize: 25.0
               ),),
             onTap: null,
           ),
           ListTile(
               leading: const Icon(Icons.logout,
-                size: 20.0,),
+                size: 40.0,),
               title: const Text('Log Out',
                 style: TextStyle(
-                    fontSize: 15.0
+                    fontSize: 25.0
                 ),),
               onTap: (){
-                FirebaseAuth.instance.signOut().then((value){
-                  Navigator.pushReplacementNamed(context, '/login');
-                });
+                FirebaseAuth.instance.signOut();
               }
           ),
           ListTile(
             leading: const Icon(Icons.close_outlined,
-                size: 20.0),
+                size: 40.0),
             title: const Text('Exit App',
               style: TextStyle(
-                  fontSize: 15.0
+                  fontSize: 25.0
               ),),
             onTap: (){SystemNavigator.pop();},
           )

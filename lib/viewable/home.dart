@@ -21,7 +21,7 @@ class _MyHomeState extends State<MyHome> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: MainSideBar(),
+      drawer: const MainSideBar(),
       appBar: AppBar(
         backgroundColor: Colors.black54,
         title: const Text(
@@ -40,10 +40,12 @@ class _MyHomeState extends State<MyHome> {
               children: [
                 newChatButton(context, Ionicons.person, false, (){}),
                 const SizedBox(width: 10.0,),
-                newChatButton(context, Icons.live_help_rounded, true, () {})
+                newChatButton(context, Icons.live_help_rounded, true, () {
+                  Navigator.pushNamed(context, '/chat');
+                })
               ],
             ),
-            TextButton(onPressed: (){FirebaseAuth.instance.signOut().then((value) => Navigator.pushReplacementNamed(context, '/login'));},
+            TextButton(onPressed: (){FirebaseAuth.instance.signOut();},
                 child: const Text('Log-Out'))
           ],
         ),

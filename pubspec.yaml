@@ -38,9 +38,10 @@ dependencies:
   flutter_spinkit: ^5.1.0
   ionicons: ^0.2.2
   firebase_core: ^2.7.0
-  firebase_auth: ^4.2.9
+  firebase_auth:
   googleapis:
   dialogflow_flutter: ^1.0.0
+  bubble:
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +68,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/others/
-  #  - assets/images/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
