@@ -1,7 +1,9 @@
+import 'package:auto_customer_care/addons/buttons&fields.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:dialogflow_flutter/dialogflowFlutter.dart';
+import 'package:ionicons/ionicons.dart';
 
 class BotChat extends StatefulWidget {
   const BotChat({Key? key}) : super(key: key);
@@ -15,8 +17,7 @@ class _BotChatState extends State<BotChat> {
   List<Map> messsages = [];
   void response(query) async {
     AuthGoogle authGoogle =
-    await AuthGoogle(fileJson: "assets/others/auto_cred.json")
-        .build();
+        await AuthGoogle(fileJson: "assets/others/auto_cred.json").build();
     DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "en");
     AIResponse aiResponse = await dialogflow.detectIntent(query);
     setState(() {
@@ -27,91 +28,101 @@ class _BotChatState extends State<BotChat> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        toolbarHeight: 60,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-            topRight: Radius.circular(0),
-            topLeft: Radius.circular(0)
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            centerTitle: true,
+            toolbarHeight: 60,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                  topRight: Radius.circular(0),
+                  topLeft: Radius.circular(0)),
+            ),
+            elevation: 10,
+            title: const Text("Quick Help"),
+          ),
+          body: Column(
+            children: <Widget>[
+              Flexible(
+                  child: messsages.isEmpty
+                      ? Center(
+                          child: Card(
+                          color: Colors.white,
+                          elevation: 5.0,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                w * 0.1, h * 0.1, w * 0.1, h * 0.1),
+                            child: const Text(
+                              'Ask Me something',
+                              style: TextStyle(fontSize: 30.0),
+                            ),
+                          ),
+                        ))
+                      : ListView.builder(
+                          reverse: true,
+                          itemCount: messsages.length,
+                          itemBuilder: (context, index) => chat(
+                              messsages[index]["message"].toString(),
+                              messsages[index]["data"]))),
+              const Divider(
+                height: 8.0,
+                indent: 10.0,
+                endIndent: 10.0,
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                    left: 15.0, right: 15.0, bottom: h * 0.002, top: h * 0.005),
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Flexible(
+                        child:
+                            normalField('Add Message', false, messageInsert)),
+                    Container(
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                          color: Colors.orange, shape: BoxShape.circle),
+                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: IconButton(
+                          icon: const Icon(
+                            Icons.send,
+                            size: 20.0,
+                          ),
+                          onPressed: () {
+                            if (messageInsert.text.isEmpty) {
+                              print("empty message");
+                            } else {
+                              setState(() {
+                                messsages.insert(0,
+                                    {"data": 1, "message": messageInsert.text});
+                              });
+                              response(messageInsert.text);
+                              messageInsert.clear();
+                            }
+                          }),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15.0,
+              )
+            ],
           ),
         ),
-        elevation: 10,
-        title: const Text("Quick Help"),
-      ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-              child: messsages.isEmpty ? Center(
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 5.0,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(w*0.1, h*0.1, w*0.1, h*0.1),
-                      child: const Text(
-                        'Ask Me something',
-                      style: TextStyle(fontSize: 30.0),),
-                    ),
-                  )) : ListView.builder(
-                  reverse: true,
-                  itemCount: messsages.length,
-                  itemBuilder: (context, index) => chat(
-                      messsages[index]["message"].toString(),
-                      messsages[index]["data"]))),
-          const Divider(
-            height: 6.0,
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20),
-            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                    child: TextField(
-                      controller: messageInsert,
-                      decoration: const InputDecoration.collapsed(
-                          hintText: "Send your message",
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20.0)),
-                    )),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: IconButton(
-                      icon: const Icon(
-                        Icons.send,
-                        size: 30.0,
-                      ),
-                      onPressed: () {
-                        if (messageInsert.text.isEmpty) {
-                          print("empty message");
-                        } else {
-                          setState(() {
-                            messsages.insert(0,
-                                {"data": 1, "message": messageInsert.text});
-                          });
-                          response(messageInsert.text);
-                          messageInsert.clear();
-                        }
-                      }),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 15.0,
-          )
-        ],
       ),
     );
   }
@@ -131,18 +142,20 @@ class _BotChatState extends State<BotChat> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage: AssetImage(
-                      data == 0 ? "assets/bot.png" : "assets/user.png"),
+                  backgroundColor: Colors.white,
+                  backgroundImage: AssetImage(data == 0
+                      ? "assets/images/bot.png"
+                      : "assets/images/user.png"),
                 ),
                 const SizedBox(
                   width: 10.0,
                 ),
                 Flexible(
                     child: Text(
-                      message,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ))
+                  message,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ))
               ],
             ),
           )),

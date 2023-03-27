@@ -19,35 +19,54 @@ class _MyHomeState extends State<MyHome> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: const MainSideBar(),
-      appBar: AppBar(
-        backgroundColor: Colors.black54,
-        title: const Text(
-          'SpecanCare Support ',
-          style: TextStyle(fontSize: 20.0, color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(w * 0.01, h * 0.03, w * 0.01, h * 0.1),
-        child: Column(
-          children: [
-            Text('Welcome ${FirebaseAuth.instance.currentUser?.displayName}'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          drawer: const MainSideBar(),
+          appBar: AppBar(
+            backgroundColor: Colors.black54,
+            title: const Text(
+              'SpecanCare Support ',
+              style: TextStyle(fontSize: 20.0, color: Colors.white),
+            ),
+            centerTitle: true,
+          ),
+          body: Padding(
+            padding: EdgeInsets.fromLTRB(w * 0.02, h * 0.03, w * 0.02, h * 0.1),
+            child: Column(
               children: [
-                newChatButton(context, Ionicons.person, false, (){}),
-                const SizedBox(width: 10.0,),
-                newChatButton(context, Icons.live_help_rounded, true, () {
-                  Navigator.pushNamed(context, '/chat');
-                })
+                Text(
+                    'Welcome ${FirebaseAuth.instance.currentUser?.displayName}'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: newChatButton(
+                            context, Ionicons.person, false, () {})),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: newChatButton(
+                          context, Icons.live_help_rounded, true, () {
+                        Navigator.pushNamed(context, '/chat');
+                      }),
+                    )
+                  ],
+                ),
+                TextButton(
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                    },
+                    child: const Text('Log-Out'))
               ],
             ),
-            TextButton(onPressed: (){FirebaseAuth.instance.signOut();},
-                child: const Text('Log-Out'))
-          ],
+          ),
         ),
       ),
     );

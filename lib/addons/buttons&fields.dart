@@ -79,6 +79,37 @@ TextField otherField(String text, IconData icon, bool isPassword,
   );
 }
 
+TextField normalField(
+    String hint, bool isDigit, TextEditingController controller) {
+  return TextField(
+    controller: controller,
+    obscureText: isDigit,
+    enableSuggestions: isDigit,
+    autocorrect: isDigit,
+    cursorColor: Colors.black,
+    style: TextStyle(color: Colors.black.withOpacity(0.9)),
+    decoration: InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.black26, fontSize: 20.0),
+      filled: true,
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: const BorderSide(color: Colors.white, width: 2)),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      floatingLabelStyle:
+          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      fillColor: Colors.black.withOpacity(0.1),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.solid,
+              color: Colors.black.withOpacity(0.3))),
+    ),
+    keyboardType: isDigit ? TextInputType.number : TextInputType.text,
+  );
+}
+
 ///This can be used if you want custom but similar login or signup buttons throughout the app.
 ///You can edit it as desired.
 Container loginSignUpButton(
