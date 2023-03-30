@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ionicons/ionicons.dart';
 
 class MainSideBar extends StatefulWidget {
   const MainSideBar({Key? key}) : super(key: key);
@@ -41,31 +42,31 @@ class _MainSideBarState extends State<MainSideBar> {
             const ListTile(
               leading: Icon(
                 Icons.feedback,
-                size: 40.0,
+                size: 30.0,
               ),
               title: Text(
                 'Support',
-                style: TextStyle(fontSize: 25.0),
+                style: TextStyle(fontSize: 15.0),
               ),
               onTap: null,
             ),
             ListTile(
                 leading: const Icon(
                   Icons.logout,
-                  size: 40.0,
+                  size: 30.0,
                 ),
                 title: const Text(
                   'Log Out',
-                  style: TextStyle(fontSize: 25.0),
+                  style: TextStyle(fontSize: 15.0),
                 ),
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                 }),
             ListTile(
-              leading: const Icon(Icons.close_outlined, size: 40.0),
+              leading: const Icon(Ionicons.close_circle, size: 30.0),
               title: const Text(
                 'Exit App',
-                style: TextStyle(fontSize: 25.0),
+                style: TextStyle(fontSize: 15.0),
               ),
               onTap: () {
                 SystemNavigator.pop();
