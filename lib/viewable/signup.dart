@@ -74,29 +74,84 @@ class _SignUpState extends State<SignUp> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('SignUp for SpecanCare'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(w*0.1, h*0.01, w*0.1, 0.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                defaultField('Preferred Name', Ionicons.person, false, nameControl, ''),
-                const SizedBox(height: 10.0,),
-                defaultField('Email', Icons.email, false, emailControl, ''),
-                const SizedBox(height: 10.0,),
-                otherField('Password', Icons.password_sharp, true, passControl),
-                loginSignUpButton(context, false, () async {await emailSignUp(emailControl.text, passControl.text, nameControl.text).then((value) => Navigator.pushReplacementNamed(context, '/home'));}),
-                GoogleSignUpButton(context, Ionicons.logo_google, true, () { Login.googleLogin().then((value){
-                  Navigator.pushReplacementNamed(context, '/home');});
-                }),
-                haveAccountOption()
-              ],
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints: BoxConstraints(maxWidth: w*1.0),
+        child: Scaffold(
+          backgroundColor: Colors.blueGrey[900],
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(w*0.0, h*0.01, w*0.0, h * 0.01),
+              child: Column(
+                children: [
+                  Container(
+                    width: w,
+                    height: h * 0.5,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          opacity: 0.9,
+                          image: AssetImage("assets/images/SpenCare.png"),
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: w * 0.03, right: w * 0.03),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          width: 240,
+                          height: 70.0,
+                          child: Text(
+                            "Welcome to SpenCare Support App, Create an Account with us and enjoy our Services.",
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 15.0),),
+                        ),
+                        defaultField('Preferred Name', Ionicons.person, false, nameControl, ''),
+                        const SizedBox(height: 10.0,),
+                        defaultField('Email', Icons.email, false, emailControl, ''),
+                        const SizedBox(height: 10.0,),
+                        otherField('Password', Icons.password_sharp, true, passControl),
+                        loginSignUpButton(context, false, () async {await emailSignUp(emailControl.text, passControl.text, nameControl.text).then((value) => Navigator.pushReplacementNamed(context, '/home'));}),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Expanded(
+                              child: Divider(
+                                color: Colors.white70,
+                                height: 5.0,
+                                thickness: 2.0,
+                                indent: 15.0,
+                              ),
+                            ),
+                            SizedBox(width: 10.0,),
+                            SizedBox(width: 30.0,
+                              child: Text(
+                                "OR",
+                                style: TextStyle(
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold),),),
+                            Expanded(
+                              child: Divider(
+                                color: Colors.white70,
+                                height: 5.0,
+                                thickness: 2.0,
+                                endIndent: 15.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                        GoogleSignUpButton(context, Ionicons.logo_google, true, () { Login.googleLogin().then((value){
+                          Navigator.pushReplacementNamed(context, '/home');});
+                        }),
+                        haveAccountOption()
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -109,13 +164,13 @@ class _SignUpState extends State<SignUp> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text('Already have an Account?',
-            style: TextStyle(color: Colors.black)),
+            style: TextStyle(color: Colors.white70)),
         GestureDetector(
           onTap: () {
             Navigator.pushReplacementNamed(context, '/login');
           },
           child: const Text('Login Instead',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
         )
       ],
     );

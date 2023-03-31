@@ -36,7 +36,7 @@ class _BotChatState extends State<BotChat> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 480),
+        constraints: const BoxConstraints(maxWidth: 720),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
