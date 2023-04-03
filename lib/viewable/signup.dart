@@ -13,7 +13,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-
   TextEditingController nameControl = TextEditingController();
   TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
@@ -21,7 +20,8 @@ class _SignUpState extends State<SignUp> {
   Future emailSignUp(String email, String password, String displayName) async {
     try {
       // Create Firebase user account with email and password
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -29,60 +29,73 @@ class _SignUpState extends State<SignUp> {
       // Set the display name for the user
       User? user = userCredential.user;
       await user?.updateDisplayName(displayName);
-    }on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        showDialog( context: context, builder: (BuildContext context) {
-          return AlertDialog(
-              title: const Text("Password is too weak!"),
-              actions: <Widget>[
-                ElevatedButton(onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                  child: const Text("OK"),
-                )]);});
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  title: const Text("Password is too weak!"),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"),
+                    )
+                  ]);
+            });
       } else if (e.code == 'email-already-in-use') {
-        showDialog( context: context, builder: (BuildContext context) {
-          return AlertDialog(
-              title: const Text("The email is Already in Use!"),
-              actions: <Widget>[
-                ElevatedButton(onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                  child: const Text("OK"),
-                )]);});
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  title: const Text("The email is Already in Use!"),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"),
+                    )
+                  ]);
+            });
       }
     } catch (e) {
       print('Error creating Firebase account: $e');
       // Handle error here
-      showDialog( context: context, builder: (BuildContext context) {
-        return AlertDialog(
-            title: const Text("Invalid Email Address!"),
-            actions: <Widget>[
-              ElevatedButton(onPressed: () {
-                Navigator.of(context).pop();
-              },
-                child: const Text("OK"),
-              )]);});
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: const Text("Invalid Email Address!"),
+                actions: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("OK"),
+                  )
+                ]);
+          });
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints: BoxConstraints(maxWidth: w*1.0),
+        constraints: BoxConstraints(maxWidth: w * 1.0),
         child: Scaffold(
           backgroundColor: Colors.blueGrey[900],
           body: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(w*0.0, h*0.01, w*0.0, h * 0.01),
+              padding:
+                  EdgeInsets.fromLTRB(w * 0.0, h * 0.01, w * 0.0, h * 0.01),
               child: Column(
                 children: [
                   Container(
@@ -99,22 +112,36 @@ class _SignUpState extends State<SignUp> {
                     padding: EdgeInsets.only(left: w * 0.03, right: w * 0.03),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         const SizedBox(
                           width: 240,
                           height: 70.0,
                           child: Text(
                             "Welcome to SpenCare Support App, Create an Account with us and enjoy our Services.",
                             style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 15.0),),
+                                color: Colors.white70, fontSize: 15.0),
+                          ),
                         ),
-                        defaultField('Preferred Name', Ionicons.person, false, nameControl, ''),
-                        const SizedBox(height: 10.0,),
-                        defaultField('Email', Icons.email, false, emailControl, ''),
-                        const SizedBox(height: 10.0,),
-                        otherField('Password', Icons.password_sharp, true, passControl),
-                        loginSignUpButton(context, false, () async {await emailSignUp(emailControl.text, passControl.text, nameControl.text).then((value) => Navigator.pushReplacementNamed(context, '/home'));}),
+                        defaultField('Preferred Name', Ionicons.person, false,
+                            nameControl, ''),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        defaultField(
+                            'Email', Icons.email, false, emailControl, ''),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        otherField('Password', Icons.password_sharp, true,
+                            passControl),
+                        loginSignUpButton(context, false, () async {
+                          await emailSignUp(emailControl.text, passControl.text,
+                                  nameControl.text)
+                              .then((value) => Navigator.pushReplacementNamed(
+                                  context, '/home'));
+                        }),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: const [
@@ -126,13 +153,18 @@ class _SignUpState extends State<SignUp> {
                                 indent: 15.0,
                               ),
                             ),
-                            SizedBox(width: 10.0,),
-                            SizedBox(width: 30.0,
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            SizedBox(
+                              width: 30.0,
                               child: Text(
                                 "OR",
                                 style: TextStyle(
                                     color: Colors.white70,
-                                    fontWeight: FontWeight.bold),),),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                             Expanded(
                               child: Divider(
                                 color: Colors.white70,
@@ -143,8 +175,9 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ],
                         ),
-                        GoogleSignUpButton(context, Ionicons.logo_google, true, () { Login.googleLogin().then((value){
-                          Navigator.pushReplacementNamed(context, '/home');});
+                        GoogleSignUpButton(context, Ionicons.logo_google, true,
+                            () {
+                          Login.googleLogin();
                         }),
                         haveAccountOption()
                       ],
@@ -159,7 +192,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Row haveAccountOption(){
+  Row haveAccountOption() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -169,12 +202,12 @@ class _SignUpState extends State<SignUp> {
           onTap: () {
             Navigator.pushReplacementNamed(context, '/login');
           },
-          child: const Text('Login Instead',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+          child: const Text(
+            'Login Instead',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         )
       ],
     );
-
   }
-
 }

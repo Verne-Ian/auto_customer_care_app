@@ -29,10 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         });
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password
-      ).then((value) => Navigator.pop(context));
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) => Navigator.pop(context));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
@@ -80,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: h * 0.5,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        opacity: 0.9,
+                          opacity: 0.9,
                           image: AssetImage("assets/images/SpenCare.png"),
                           fit: BoxFit.cover),
                     ),
@@ -92,17 +91,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.only(left: w * 0.03, right: w * 0.03),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         const SizedBox(
                           width: 240,
                           height: 70.0,
                           child: Text(
                             "Hello there, Welcome to SpenCare Support App Please Log In to use our services",
-                          style: TextStyle(
-                              color: Colors.white,
-                          fontSize: 14.0),),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 14.0),
+                          ),
                         ),
-                        const SizedBox(height: 10.0,),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
                         defaultField('Email', Icons.email_rounded, false,
                             emailControl, ''),
                         const SizedBox(
@@ -110,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         otherField('Enter Password', Icons.password, true,
                             passControl),
-                        const SizedBox(height: 8.0,),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
                         loginSignUpButton(context, true, () {
                           if (emailControl.text.isNotEmpty &&
                               passControl.text.isNotEmpty) {
@@ -129,13 +134,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 indent: 15.0,
                               ),
                             ),
-                            SizedBox(width: 10.0,),
-                            SizedBox(width: 30.0,
-                            child: Text(
-                              "OR",
-                              style: TextStyle(
-                                  color: Colors.white,
-                              fontWeight: FontWeight.bold),),),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            SizedBox(
+                              width: 30.0,
+                              child: Text(
+                                "OR",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                             Expanded(
                               child: Divider(
                                 color: Colors.white,
@@ -148,9 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         GoogleSignUpButton(context, Ionicons.logo_google, true,
                             () {
-                          Login.googleLogin().then((value) {
-                            Navigator.pushReplacementNamed(context, '/home');
-                          });
+                          Login.googleLogin();
                         }),
                         signUpOption()
                       ],
