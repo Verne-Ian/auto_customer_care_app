@@ -14,14 +14,14 @@ class BotChat extends StatefulWidget {
 
 class _BotChatState extends State<BotChat> {
   final messageInsert = TextEditingController();
-  List<Map> messsages = [];
+  List<Map> messages = [];
   void response(query) async {
     AuthGoogle authGoogle =
         await AuthGoogle(fileJson: "assets/others/auto_cred.json").build();
     DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "en");
     AIResponse aiResponse = await dialogflow.detectIntent(query);
     setState(() {
-      messsages.insert(0, {
+      messages.insert(0, {
         "data": 0,
         "message": aiResponse.getListMessage()![0]["text"]["text"][0].toString()
       });
@@ -44,8 +44,8 @@ class _BotChatState extends State<BotChat> {
             toolbarHeight: 60,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(0),
+                  bottomRight: Radius.circular(0),
                   topRight: Radius.circular(0),
                   topLeft: Radius.circular(0)),
             ),
@@ -55,7 +55,7 @@ class _BotChatState extends State<BotChat> {
           body: Column(
             children: <Widget>[
               Flexible(
-                  child: messsages.isEmpty
+                  child: messages.isEmpty
                       ? Center(
                           child: Card(
                           color: Colors.white,
@@ -71,10 +71,10 @@ class _BotChatState extends State<BotChat> {
                         ))
                       : ListView.builder(
                           reverse: true,
-                          itemCount: messsages.length,
+                          itemCount: messages.length,
                           itemBuilder: (context, index) => chat(
-                              messsages[index]["message"].toString(),
-                              messsages[index]["data"]))),
+                              messages[index]["message"].toString(),
+                              messages[index]["data"]))),
               const Divider(
                 height: 8.0,
                 indent: 10.0,
@@ -106,7 +106,7 @@ class _BotChatState extends State<BotChat> {
                               print("empty message");
                             } else {
                               setState(() {
-                                messsages.insert(0,
+                                messages.insert(0,
                                     {"data": 1, "message": messageInsert.text});
                               });
                               response(messageInsert.text);
