@@ -136,11 +136,12 @@ class _SignUpState extends State<SignUp> {
                         ),
                         otherField('Password', Icons.password_sharp, true,
                             passControl),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
                         loginSignUpButton(context, false, () async {
                           await emailSignUp(emailControl.text, passControl.text,
-                                  nameControl.text)
-                              .then((value) => Navigator.pushReplacementNamed(
-                                  context, '/home'));
+                                  nameControl.text);
                         }),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

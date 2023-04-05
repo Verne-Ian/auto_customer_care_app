@@ -22,7 +22,7 @@ class _MyHomeState extends State<MyHome> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 480),
+        constraints: BoxConstraints(maxWidth: w * 1.0),
         child: Scaffold(
           backgroundColor: Colors.white,
           drawer: const MainSideBar(),

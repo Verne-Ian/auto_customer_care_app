@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.andy_n_special.auto_customer_care_app">
    <application
-        android:label="auto_customer_care_app"
+        android:label="SpenCare"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
