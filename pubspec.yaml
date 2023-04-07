@@ -37,12 +37,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_spinkit: ^5.1.0
   ionicons: ^0.2.2
-  firebase_core: ^2.7.0
+  firebase_core:
   firebase_auth:
   googleapis:
   dialogflow_flutter: ^1.0.0
   bubble:
   google_sign_in:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:

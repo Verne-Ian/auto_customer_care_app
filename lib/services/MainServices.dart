@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Login {
@@ -11,19 +12,38 @@ class Login {
     return FirebaseAuth.instance.signInWithPhoneNumber(phone);
   }
 
-  static googleLogin() async {
-    //beginning the sign in process
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+  static Future<User?> googleLogin() async {
+    if (kIsWeb) {
+      final FirebaseAuth _auth = FirebaseAuth.instance;
+      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
 
-    //Obataining the Authentication details from the Google sign in Request
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      // Trigger the authentication flow
+      try {
+        final UserCredential userCredential =
+            await _auth.signInWithPopup(googleProvider);
 
-    //Creates a new credential for the user
-    final credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+        // Return the user object
+        return userCredential.user;
+      } catch (e) {
+        print(e.toString());
+        return null;
+      }
+    } else {
+      //beginning the sign in process
+      final GoogleSignInAccount gUser = await GoogleSignIn().signIn();
 
-    //This will sign in the user
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      //Obataining the Authentication details from the Google sign in Request
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+
+      //Creates a new credential for the user
+      final credential = GoogleAuthProvider.credential(
+          accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+
+      //This will sign in the user
+      final appUser =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      return appUser.user;
+    }
   }
 }
 

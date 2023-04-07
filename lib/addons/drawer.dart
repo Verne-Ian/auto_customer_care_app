@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainSideBar extends StatefulWidget {
   const MainSideBar({Key? key}) : super(key: key);
@@ -14,7 +16,8 @@ class _MainSideBarState extends State<MainSideBar> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
+    // double h = MediaQuery.of(context).size.height;
+    var telegramUrl = Uri.parse('https://t.me/+VvQG2HfRTGBlYjI8');
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 380),
@@ -27,28 +30,36 @@ class _MainSideBarState extends State<MainSideBar> {
               decoration: const BoxDecoration(color: Colors.black),
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(
-                    child: Image.network(
-                  '${FirebaseAuth.instance.currentUser?.photoURL}',
-                  scale: 1.0,
-                  fit: BoxFit.cover,
-                  width: 100,
-                  height: 70,
-                )),
+                    child: kIsWeb
+                        ? Image.network(
+                            '${FirebaseAuth.instance.currentUser!.photoURL}',
+                            scale: 1.0,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 70,
+                          )
+                        : Image.network(
+                            '${FirebaseAuth.instance.currentUser?.photoURL}',
+                            scale: 1.0,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 70,
+                          )),
               ),
               accountName:
                   Text('${FirebaseAuth.instance.currentUser?.displayName}'),
               accountEmail: Text('${FirebaseAuth.instance.currentUser?.email}'),
             ),
-            const ListTile(
-              leading: Icon(
+            ListTile(
+              leading: const Icon(
                 Icons.feedback,
                 size: 30.0,
               ),
-              title: Text(
+              title: const Text(
                 'Support',
                 style: TextStyle(fontSize: 15.0),
               ),
-              onTap: null,
+              onTap: () => launchUrl(telegramUrl),
             ),
             ListTile(
                 leading: const Icon(
