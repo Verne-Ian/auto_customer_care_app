@@ -41,9 +41,12 @@ dependencies:
   firebase_auth:
   googleapis:
   dialogflow_flutter: ^1.0.0
-  bubble:
   google_sign_in:
+  cloud_firestore:
   url_launcher:
+  flutter_chat_bubble:
+  speech_to_text:
+  flutter_tts:
 
 dev_dependencies:
   flutter_test:

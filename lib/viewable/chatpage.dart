@@ -1,9 +1,14 @@
 import 'package:auto_customer_care/addons/buttons&fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:bubble/bubble.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:dialogflow_flutter/dialogflowFlutter.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 class BotChat extends StatefulWidget {
   const BotChat({Key? key}) : super(key: key);
@@ -13,13 +18,58 @@ class BotChat extends StatefulWidget {
 }
 
 class _BotChatState extends State<BotChat> {
+
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  final FlutterTts flutterTts = FlutterTts();
+
   final messageInsert = TextEditingController();
   List<Map> messages = [];
-  void response(query) async {
-    AuthGoogle authGoogle =
-        await AuthGoogle(fileJson: "assets/others/auto_cred.json").build();
+  //final firestoreColl = FirebaseFirestore.instance.collection('messages');
+
+  Future<void> _listen() async {
+    if (!_speech.isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (status) => print('onStatus: $status'),
+        onError: (error) => print('onError: $error'),
+      );
+      if (available) {
+        bool _isListening;
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (result) => setState(() {
+            messageInsert.text = result.recognizedWords;
+          }),
+        );
+      }
+    }
+  }
+
+  Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(text);
+  }
+
+
+  Future<void> response(query) async {
+    messageInsert.clear();
+
+    ///The lines below will work on authenticating the client app as it tries to get a response
+    ///from the DialogFlow API
+    AuthGoogle authGoogle = await AuthGoogle(fileJson: "assets/others/auto_cred.json").build();
     DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "en");
     AIResponse aiResponse = await dialogflow.detectIntent(query);
+
+    ///This is for saving the user and bot messages to cloud firestore. Only use if necessary.
+    /*
+    firestoreColl.add({'text': query, 'isUser': true, 'timestamp': FieldValue.serverTimestamp()});
+    firestoreColl.add({
+      'text': aiResponse.getListMessage()![0]["text"]["text"][0].toString(),
+      'isUser': false,
+      'timestamp': FieldValue.serverTimestamp()
+    });
+     */
+
     setState(() {
       messages.insert(0, {
         "data": 0,
@@ -55,26 +105,64 @@ class _BotChatState extends State<BotChat> {
           body: Column(
             children: <Widget>[
               Flexible(
-                  child: messages.isEmpty
-                      ? Center(
-                          child: Card(
-                          color: Colors.white,
-                          elevation: 5.0,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(
-                                w * 0.1, h * 0.1, w * 0.1, h * 0.1),
-                            child: const Text(
-                              'Ask Me something',
-                              style: TextStyle(fontSize: 30.0),
-                            ),
+                child: messages.isEmpty
+                    ? Center(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    color: Colors.white,
+                    elevation: 10.0,
+                    shadowColor: Colors.black.withOpacity(0.5),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(w * 0.1, h * 0.1, w * 0.1, h * 0.02),
+                          child: const Text(
+                            'Ask me something!',
+                            style: TextStyle(fontSize: 25.0),
                           ),
-                        ))
-                      : ListView.builder(
-                          reverse: true,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) => chat(
-                              messages[index]["message"].toString(),
-                              messages[index]["data"]))),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton.icon(
+                              onPressed: () {
+                                // handle the first button press
+                              },
+                              icon: const Icon(Ionicons.alert),
+                              label: const Text('Ambulance'),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                // handle the second button press
+                              },
+                              icon: const Icon(Icons.share),
+                              label: const Text('Share'),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                // handle the third button press
+                              },
+                              icon: const Icon(Icons.comment),
+                              label: const Text('Comment'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                )
+                    : ListView.builder(
+                  reverse: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final data = messages[index];
+                    return chat(data['text'], data['isUser'] ? 1 : 0);
+                  },
+                ),
+              ),
               const Divider(
                 height: 8.0,
                 indent: 10.0,
@@ -85,17 +173,21 @@ class _BotChatState extends State<BotChat> {
                     left: 15.0, right: 15.0, bottom: h * 0.002, top: h * 0.005),
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Flexible(
                         child:
                             normalField('Add Message', false, messageInsert)),
+                    IconButton(
+                      icon: const Icon(Icons.mic),
+                      onPressed: () async {
+                        await _listen();
+                      },
+                    ),
                     Container(
                       alignment: Alignment.center,
                       decoration: const BoxDecoration(
                           color: Colors.orange, shape: BoxShape.circle),
-                      margin: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: IconButton(
                           icon: const Icon(
                             Icons.send,
@@ -129,35 +221,48 @@ class _BotChatState extends State<BotChat> {
 
   Widget chat(String message, int data) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Bubble(
-          radius: const Radius.circular(15.0),
-          color: data == 0 ? Colors.black : Colors.black45,
-          elevation: 0.0,
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: ChatBubble(
+        backGroundColor: data == 0 ? Colors.indigo : Colors.blueGrey,
+          clipper: data == 0
+              ? ChatBubbleClipper2(type: BubbleType.receiverBubble, radius: 10.0)
+              : ChatBubbleClipper2(type: BubbleType.sendBubble, radius: 10.0),
+          elevation: 3.0,
           alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
-          nip: data == 0 ? BubbleNip.leftBottom : BubbleNip.rightTop,
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage(data == 0
-                      ? "assets/images/bot.png"
-                      : "assets/images/user.png"),
-                ),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                Flexible(
-                    child: Text(
-                  message,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ))
-              ],
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 15.0,
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(data == 0
+                    ? "assets/images/bot.png"
+                    : "assets/images/user.png"),
+              ),
+              const SizedBox(
+                width: 5.0,
+              ),
+              Flexible(
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                        color: Colors.white, fontWeight: FontWeight.normal),
+                  )),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: IconButton(
+                    onPressed: (){},
+                    icon: data == 1 ? Icon(null) : Icon(Icons.thumb_up, color: Colors.white, size: 15.0,)),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: IconButton(
+                    onPressed: (){},
+                    icon: data == 1 ? Icon(null) : Icon(Icons.thumb_down, color: Colors.white, size: 15.0,)),
+              )
+            ],
           )),
     );
   }

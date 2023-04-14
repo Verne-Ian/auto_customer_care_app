@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Login {
@@ -30,20 +32,20 @@ class Login {
       }
     } else {
       //beginning the sign in process
-      final GoogleSignInAccount gUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
       //Obataining the Authentication details from the Google sign in Request
-      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+      final GoogleSignInAuthentication? gAuth = await gUser?.authentication;
 
       //Creates a new credential for the user
       final credential = GoogleAuthProvider.credential(
-          accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+          accessToken: gAuth?.accessToken, idToken: gAuth?.idToken);
 
       //This will sign in the user
       final appUser =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
       return appUser.user;
-    }
+  }
   }
 }
 
