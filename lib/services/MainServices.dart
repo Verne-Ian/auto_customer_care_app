@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
+
 
 class Login {
   String userID;
@@ -49,15 +51,119 @@ class Login {
   }
 }
 
-class newUser {
-  String email;
-  String password;
-  String phone;
-  String displayName;
+class MyUser {
+  final String id;
+  final String name;
+  final String imageUrl;
 
-  newUser(
-      {required this.email,
-      required this.password,
-      required this.phone,
-      required this.displayName});
+  MyUser(
+      {
+        required this.id,
+        required this.name,
+        required this.imageUrl,
+      });
+
+  factory MyUser.fromFirebaseUser(User firebaseUser) {
+    return MyUser(
+      id: firebaseUser.uid,
+      name: firebaseUser.displayName ?? '',
+      imageUrl: firebaseUser.photoURL ?? '',
+    );
+  }
+
 }
+
+class Message {
+  final String id;
+  final String text;
+  final String imageUrl;
+  final MyUser sender;
+  var time;
+
+  Message({
+    required this.id,
+    required this.text,
+    required this.imageUrl,
+    required this.sender,
+    required this.time,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'text': text,
+      'imageUrl': imageUrl,
+      'sender': {
+        'id': sender.id,
+        'name': sender.name,
+        'imageUrl': sender.imageUrl,
+      },
+      'time': time,
+    };
+  }
+
+  static Message fromMap(Map<String, dynamic> map) {
+    final senderMap = map['sender'] as Map<String, dynamic>;
+    final sender = MyUser(
+      id: senderMap['id'] as String,
+      name: senderMap['name'] as String,
+      imageUrl: senderMap['imageUrl'] as String,
+    );
+
+    return Message(
+      id: map['id'] as String,
+      text: map['text'] as String,
+      imageUrl: map['imageUrl'] as String,
+      sender: sender,
+      time: map['time'] as Timestamp,
+    );
+  }
+
+}
+
+class ChatProvider with ChangeNotifier {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  late MyUser _currentUser;
+  List<Message> _messages = [];
+
+  ChatProvider() {
+    _auth.authStateChanges().listen((user) {
+      if (user != null) {
+        _currentUser = MyUser.fromFirebaseUser(user);
+      }
+    });
+  }
+
+  MyUser get currentUser => _currentUser;
+  List<Message> get messages => _messages;
+
+  Future<void> sendMessage(String text, File? image) async {
+    try {
+      final ref = _storage.ref().child('images/${DateTime.now().toString()}');
+      final imageUrl = image != null ? await ref.putFile(image).then((task) => task.ref.getDownloadURL()) : null;
+
+      final message = Message(
+        id: '',
+        text: text,
+        imageUrl: imageUrl ?? '',
+        sender: _currentUser,
+        time: FieldValue.serverTimestamp()
+      );
+
+      await _db.collection('messages').add(message.toMap());
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  void loadMessages() {
+    _db.collection('messages').orderBy('time').snapshots().listen((snapshot) {
+      _messages = snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList();
+      notifyListeners();
+    });
+  }
+}
+

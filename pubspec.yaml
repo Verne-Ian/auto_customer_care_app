@@ -47,6 +47,8 @@ dependencies:
   flutter_chat_bubble:
   speech_to_text:
   flutter_tts:
+  provider:
+  firebase_storage:
 
 dev_dependencies:
   flutter_test:
