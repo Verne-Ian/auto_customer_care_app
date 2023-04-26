@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
-
 class Login {
   String userID;
   String passcode;
@@ -45,9 +44,9 @@ class Login {
 
       //This will sign in the user
       final appUser =
-      await FirebaseAuth.instance.signInWithCredential(credential);
+          await FirebaseAuth.instance.signInWithCredential(credential);
       return appUser.user;
-  }
+    }
   }
 }
 
@@ -56,12 +55,11 @@ class MyUser {
   final String name;
   final String imageUrl;
 
-  MyUser(
-      {
-        required this.id,
-        required this.name,
-        required this.imageUrl,
-      });
+  MyUser({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+  });
 
   factory MyUser.fromFirebaseUser(User firebaseUser) {
     return MyUser(
@@ -70,7 +68,6 @@ class MyUser {
       imageUrl: firebaseUser.photoURL ?? '',
     );
   }
-
 }
 
 class Message {
@@ -118,7 +115,6 @@ class Message {
       time: map['time'] as Timestamp,
     );
   }
-
 }
 
 class ChatProvider with ChangeNotifier {
@@ -142,16 +138,30 @@ class ChatProvider with ChangeNotifier {
 
   Future<void> sendMessage(String text, File? image) async {
     try {
-      final ref = _storage.ref().child('images/${DateTime.now().toString()}');
-      final imageUrl = image != null ? await ref.putFile(image).then((task) => task.ref.getDownloadURL()) : null;
+      final ref =
+          _storage.ref().child('ChatImages/${DateTime.now().toString()}');
+
+      final String? imageUrl;
+      if (image != null) {
+        if (kIsWeb) {
+          imageUrl = await ref
+              .putData(await image.readAsBytes())
+              .then((task) => task.ref.getDownloadURL());
+        } else {
+          imageUrl = await ref
+              .putFile(image)
+              .then((task) => task.ref.getDownloadURL());
+        }
+      } else {
+        imageUrl = null;
+      }
 
       final message = Message(
-        id: '',
-        text: text,
-        imageUrl: imageUrl ?? '',
-        sender: _currentUser,
-        time: FieldValue.serverTimestamp()
-      );
+          id: '',
+          text: text,
+          imageUrl: imageUrl ?? '',
+          sender: _currentUser,
+          time: FieldValue.serverTimestamp());
 
       await _db.collection('messages').add(message.toMap());
     } catch (error) {
@@ -161,9 +171,9 @@ class ChatProvider with ChangeNotifier {
 
   void loadMessages() {
     _db.collection('messages').orderBy('time').snapshots().listen((snapshot) {
-      _messages = snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList();
+      _messages =
+          snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList();
       notifyListeners();
     });
   }
 }
-

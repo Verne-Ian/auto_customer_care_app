@@ -45,8 +45,10 @@ class _MyHomeState extends State<MyHome> {
                   children: [
                     Expanded(
                         flex: 1,
-                        child: newChatButton(
-                            context, Ionicons.person, false, () {})),
+                        child:
+                            newChatButton(context, Ionicons.person, false, () {
+                          Navigator.pushNamed(context, '/human');
+                        })),
                     const SizedBox(
                       width: 10.0,
                     ),

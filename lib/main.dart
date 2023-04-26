@@ -6,6 +6,7 @@ import '../viewable/home.dart';
 import '../viewable/loadingScreen.dart';
 import '../viewable/login.dart';
 import '../viewable/signup.dart';
+import '../viewable/humanChat.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,8 @@ void main() async {
       '/sign': (context) => const SignUp(),
       '/login': (context) => const LoginScreen(),
       '/chat': (context) => const BotChat(),
-      '/auth': (context) => const Auth()
+      '/auth': (context) => const Auth(),
+      '/human': (context) => const ChatPage()
     },
   ));
 }
