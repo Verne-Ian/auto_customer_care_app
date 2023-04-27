@@ -49,6 +49,7 @@ dependencies:
   flutter_tts:
   provider:
   firebase_storage:
+  firebase_storage_web:
   image_picker: ^0.8.7+4
   image_picker_web:
 

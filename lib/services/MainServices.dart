@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage_web/firebase_storage_web.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
@@ -120,7 +121,6 @@ class Message {
 class ChatProvider with ChangeNotifier {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   late MyUser _currentUser;
   List<Message> _messages = [];
@@ -135,18 +135,21 @@ class ChatProvider with ChangeNotifier {
 
   MyUser get currentUser => _currentUser;
   List<Message> get messages => _messages;
+  FirebaseStorage get _storage =>
+      kIsWeb ? FirebaseStorageWeb.instance().ref();
 
   Future<void> sendMessage(String text, File? image) async {
     try {
       final ref =
-          _storage.ref().child('ChatImages/${DateTime.now().toString()}');
-
+      _storage.ref().child('ChatImages/${DateTime.now().toString()}');
       final String? imageUrl;
+
       if (image != null) {
         if (kIsWeb) {
-          imageUrl = await ref
-              .putData(await image.readAsBytes())
-              .then((task) => task.ref.getDownloadURL());
+          final metadata = SettableMetadata(contentType: 'image/jpeg');
+          final uploadTask = ref.putData(await image.readAsBytes(), metadata);
+          final snapshot = await uploadTask.onComplete;
+          imageUrl = await snapshot.ref.getDownloadURL();
         } else {
           imageUrl = await ref
               .putFile(image)

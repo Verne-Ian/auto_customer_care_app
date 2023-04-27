@@ -186,7 +186,7 @@ packages:
     source: hosted
     version: "4.1.30"
   firebase_storage_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_storage_web
       sha256: "28e2c6317214f63af56b1b3f2907d168534a7629ec24269b036556f399063d5a"
