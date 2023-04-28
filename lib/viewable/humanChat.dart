@@ -13,10 +13,10 @@ class ChatPage extends StatefulWidget {
   _ChatPageState createState() => _ChatPageState();
 }
 
-lass _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
-  File _image = File('');
+  XFile _image = XFile('');
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ lass _ChatPageState extends State<ChatPage> {
                                 .pickImage(source: ImageSource.gallery);
                             if (pickedFile != null) {
                               setState(() {
-                                _image = File(pickedFile.path);
+                                _image = XFile(pickedFile.path);
                               });
                             }
                           },
@@ -119,7 +119,7 @@ lass _ChatPageState extends State<ChatPage> {
                               provider.sendMessage(_controller.text, _image);
                               _controller.clear();
                               setState(() {
-                                _image = File('');
+                                _image = XFile('');
                               });
                               _scrollController.animateTo(
                                 _scrollController.position.maxScrollExtent,

@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
+
 class Login {
   String userID;
   String passcode;
@@ -72,11 +74,11 @@ class MyUser {
 }
 
 class Message {
-  final String id;
-  final String text;
-  final String imageUrl;
+  late String id;
+  late String text;
+  late String imageUrl;
   final MyUser sender;
-  var time;
+  final Timestamp time;
 
   Message({
     required this.id,
@@ -103,17 +105,17 @@ class Message {
   static Message fromMap(Map<String, dynamic> map) {
     final senderMap = map['sender'] as Map<String, dynamic>;
     final sender = MyUser(
-      id: senderMap['id'] as String,
-      name: senderMap['name'] as String,
-      imageUrl: senderMap['imageUrl'] as String,
+      id: senderMap['id'],
+      name: senderMap['name'],
+      imageUrl: senderMap['imageUrl'],
     );
 
     return Message(
-      id: map['id'] as String,
-      text: map['text'] as String,
-      imageUrl: map['imageUrl'] as String,
+      id: map['id'],
+      text: map['text'],
+      imageUrl: map['imageUrl'],
       sender: sender,
-      time: map['time'] as Timestamp,
+      time: map['time'],
     );
   }
 }
@@ -135,25 +137,18 @@ class ChatProvider with ChangeNotifier {
 
   MyUser get currentUser => _currentUser;
   List<Message> get messages => _messages;
-  FirebaseStorage get _storage =>
-      kIsWeb ? FirebaseStorageWeb.instance().ref();
+  FirebaseStorage get _storage => kIsWeb ? FirebaseStorageWeb.instance : FirebaseStorage.instance;
 
-  Future<void> sendMessage(String text, File? image) async {
+  Future<void> sendMessage(String text, XFile? image) async {
     try {
-      final ref =
-      _storage.ref().child('ChatImages/${DateTime.now().toString()}');
-      final String? imageUrl;
+      final ref = _storage.ref().child('ChatImages/${DateTime.now().toString()}');
 
+      late String? imageUrl;
       if (image != null) {
         if (kIsWeb) {
-          final metadata = SettableMetadata(contentType: 'image/jpeg');
-          final uploadTask = ref.putData(await image.readAsBytes(), metadata);
-          final snapshot = await uploadTask.onComplete;
-          imageUrl = await snapshot.ref.getDownloadURL();
+          imageUrl = await ref.putData(await image.readAsBytes()).then((task) => task.ref.getDownloadURL());
         } else {
-          imageUrl = await ref
-              .putFile(image)
-              .then((task) => task.ref.getDownloadURL());
+          imageUrl = await ref.putFile(image as File).then((task) => task.ref.getDownloadURL());
         }
       } else {
         imageUrl = null;
@@ -164,13 +159,14 @@ class ChatProvider with ChangeNotifier {
           text: text,
           imageUrl: imageUrl ?? '',
           sender: _currentUser,
-          time: FieldValue.serverTimestamp());
+          time: Timestamp.now());
 
-      await _db.collection('messages').add(message.toMap());
+      await FirebaseFirestore.instance.collection('messages').add(message.toMap());
     } catch (error) {
       print(error);
     }
   }
+
 
   void loadMessages() {
     _db.collection('messages').orderBy('time').snapshots().listen((snapshot) {
