@@ -48,7 +48,7 @@ class _MyHomeState extends State<MyHome> {
                         child:
                             newChatButton(context, Ionicons.person, false, () {
                           Navigator.pushNamed(context, '/human');
-                        })),
+                        }, 'Personalised Help')),
                     const SizedBox(
                       width: 10.0,
                     ),
@@ -57,15 +57,38 @@ class _MyHomeState extends State<MyHome> {
                       child: newChatButton(
                           context, Icons.live_help_rounded, true, () {
                         Navigator.pushNamed(context, '/chat');
-                      }),
+                      }, 'Quick Help'),
                     )
                   ],
                 ),
-                TextButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child:
+                        newChatButton(context, Ionicons.car, false, () {
+                          Navigator.pushNamed(context, '/ambie');
+                        }, 'Request Ambulance')),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: newChatButton(
+                          context, Ionicons.book_outline, true, () {
+                        Navigator.pushNamed(context, '/appoint');
+                      }, 'Make Appointment'),
+                    )
+                  ],
+                ),
+                /*TextButton(
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
                     },
                     child: const Text('Log-Out'))
+
+                 */
               ],
             ),
           ),

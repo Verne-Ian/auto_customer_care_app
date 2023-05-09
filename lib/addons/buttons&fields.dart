@@ -224,7 +224,7 @@ Container GoogleSignUpButton(
 }
 
 Container newChatButton(
-    BuildContext context, IconData icons, bool isBot, Function onTap) {
+    BuildContext context, IconData icons, bool isBot, Function onTap, String text) {
   return Container(
     width: MediaQuery.of(context).size.width * 0.45,
     height: 120,
@@ -249,7 +249,7 @@ Container newChatButton(
         size: 30.0,
       ),
       label: Text(
-        isBot ? 'Quick Help' : 'Personalised Help',
+        text,
         style: const TextStyle(
             color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
       ),

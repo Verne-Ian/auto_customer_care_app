@@ -1,12 +1,14 @@
 // @dart=2.9
 import 'package:auto_customer_care/services/auth.dart';
+import 'package:auto_customer_care/viewable/ambulance.dart';
+import 'package:auto_customer_care/viewable/appointment.dart';
 
 import '../viewable/chatpage.dart';
 import '../viewable/home.dart';
 import '../viewable/loadingScreen.dart';
 import '../viewable/login.dart';
 import '../viewable/signup.dart';
-import '../viewable/humanChat.dart';
+
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,8 @@ void main() async {
       '/login': (context) => const LoginScreen(),
       '/chat': (context) => const BotChat(),
       '/auth': (context) => const Auth(),
-      '/human': (context) => const ChatPage()
+      '/ambie': (context) => const AmbulanceRequestPage(),
+      '/appoint': (context) => const AppointmentForm()
     },
   ));
 }

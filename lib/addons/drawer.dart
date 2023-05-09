@@ -29,6 +29,7 @@ class _MainSideBarState extends State<MainSideBar> {
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(color: Colors.black),
               currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.black54,
                 child: ClipOval(
                     child: kIsWeb
                         ? Image.network(

@@ -1,5 +1,4 @@
 import 'package:auto_customer_care/addons/buttons&fields.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:dialogflow_flutter/dialogflowFlutter.dart';
@@ -52,11 +51,16 @@ class _BotChatState extends State<BotChat> {
 
 
   Future<void> response(query) async {
+    if (query == null || query.isEmpty) {
+      return;
+    }else{
+
     messageInsert.clear();
 
     ///The lines below will work on authenticating the client app as it tries to get a response
     ///from the DialogFlow API
-    AuthGoogle authGoogle = await AuthGoogle(fileJson: "assets/others/auto_cred.json").build();
+    AuthGoogle authGoogle = await AuthGoogle(
+        fileJson: "assets/others/auto_cred.json").build();
     DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "en");
     AIResponse aiResponse = await dialogflow.detectIntent(query);
 
@@ -76,6 +80,7 @@ class _BotChatState extends State<BotChat> {
         "message": aiResponse.getListMessage()![0]["text"]["text"][0].toString()
       });
     });
+  }
   }
 
   @override
@@ -107,49 +112,54 @@ class _BotChatState extends State<BotChat> {
               Flexible(
                 child: messages.isEmpty
                     ? Center(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    color: Colors.white,
-                    elevation: 10.0,
-                    shadowColor: Colors.black.withOpacity(0.5),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(w * 0.1, h * 0.1, w * 0.1, h * 0.02),
-                          child: const Text(
-                            'Ask me something!',
-                            style: TextStyle(fontSize: 25.0),
+                  child: SizedBox(
+                    width: w * 0.95,
+                    height: h * 0.3,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      color: Colors.white,
+                      elevation: 10.0,
+                      shadowColor: Colors.black.withOpacity(0.5),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(w * 0.1, h * 0.1, w * 0.1, h * 0.02),
+                            child: const Text(
+                              'Ask me something!',
+                              style: TextStyle(fontSize: 25.0),
+                            ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () {
-                                // handle the first button press
-                              },
-                              icon: const Icon(Ionicons.alert),
-                              label: const Text('Ambulance'),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                // handle the second button press
-                              },
-                              icon: const Icon(Icons.share),
-                              label: const Text('Share'),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                // handle the third button press
-                              },
-                              icon: const Icon(Icons.comment),
-                              label: const Text('Comment'),
-                            ),
-                          ],
-                        ),
-                      ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton.icon(
+                                onPressed: () {
+                                  // handle the first button press
+                                  Navigator.pushNamed(context, '/ambie');
+                                },
+                                icon: const Icon(Ionicons.alert),
+                                label: const Text('Ambulance'),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  // handle the second button press
+                                },
+                                icon: const Icon(Icons.share),
+                                label: const Text('Share'),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  // handle the third button press
+                                },
+                                icon: const Icon(Icons.comment),
+                                label: const Text('Comment'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 
@@ -158,8 +168,9 @@ class _BotChatState extends State<BotChat> {
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final data = messages[index];
-                    return chat(data['text'], data['isUser'] ? 1 : 0);
+                    //final data = messages[index];
+                    return chat(messages[index]["message"].toString(),
+                        messages[index]["data"]);
                   },
                 ),
               ),
@@ -254,13 +265,13 @@ class _BotChatState extends State<BotChat> {
                 padding: EdgeInsets.zero,
                 child: IconButton(
                     onPressed: (){},
-                    icon: data == 1 ? Icon(null) : Icon(Icons.thumb_up, color: Colors.white, size: 15.0,)),
+                    icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_up, color: Colors.white, size: 15.0,)),
               ),
               Padding(
                 padding: EdgeInsets.zero,
                 child: IconButton(
                     onPressed: (){},
-                    icon: data == 1 ? Icon(null) : Icon(Icons.thumb_down, color: Colors.white, size: 15.0,)),
+                    icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_down, color: Colors.white, size: 15.0,)),
               )
             ],
           )),

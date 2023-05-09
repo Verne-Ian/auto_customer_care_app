@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_storage_web/firebase_storage_web.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
@@ -137,7 +136,7 @@ class ChatProvider with ChangeNotifier {
 
   MyUser get currentUser => _currentUser;
   List<Message> get messages => _messages;
-  FirebaseStorage get _storage => kIsWeb ? FirebaseStorageWeb.instance : FirebaseStorage.instance;
+  FirebaseStorage get _storage => FirebaseStorage.instance;
 
   Future<void> sendMessage(String text, XFile? image) async {
     try {
