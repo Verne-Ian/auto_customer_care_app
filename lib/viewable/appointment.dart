@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,24 +17,35 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+  final User? currentUser = FirebaseAuth.instance.currentUser;
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       try {
         FirebaseFirestore firestore = FirebaseFirestore.instance;
         firestore.collection('appointments').add({
-          'name': _nameController.text,
+          'name': currentUser?.displayName,
           'phone': _phoneController.text,
           'date': _dateController.text,
           'time': _timeController.text,
           'status': 'Pending',
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
+        }).then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Appointment request submitted!'),
             backgroundColor: Colors.green,
-          ),
-        );
+          ),);
+          _phoneController.clear();
+          _dateController.text = 'Select Date';
+          _timeController.clear();
+        }).onError((error, stackTrace) { ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Failed to submit appointment request. Please try again later.'),
+            backgroundColor: Colors.red,
+          ),);
+        });
+        
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -82,7 +94,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Appointment Form'),
+        title: const Text('Make Appointment'),
         backgroundColor: Colors.black54,
       ),
       body: SingleChildScrollView(
@@ -93,17 +105,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        TextFormField(
-                            controller: _nameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Full Name',
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your full name';
-                              }
-                              return null;
-                            }),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text('${currentUser?.displayName}',
+                            style: const TextStyle(color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25.0),),
+                        ),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _phoneController,

@@ -132,7 +132,7 @@ class _BotChatState extends State<BotChat> {
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               TextButton.icon(
                                 onPressed: () {
@@ -145,16 +145,10 @@ class _BotChatState extends State<BotChat> {
                               TextButton.icon(
                                 onPressed: () {
                                   // handle the second button press
+                                  Navigator.pushNamed(context, '/appoint');
                                 },
-                                icon: const Icon(Icons.share),
-                                label: const Text('Share'),
-                              ),
-                              TextButton.icon(
-                                onPressed: () {
-                                  // handle the third button press
-                                },
-                                icon: const Icon(Icons.comment),
-                                label: const Text('Comment'),
+                                icon: const Icon(Icons.book),
+                                label: const Text('Make Appointment'),
                               ),
                             ],
                           ),
@@ -181,8 +175,8 @@ class _BotChatState extends State<BotChat> {
               ),
               Container(
                 padding: EdgeInsets.only(
-                    left: 15.0, right: 15.0, bottom: h * 0.002, top: h * 0.005),
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    left: 8.0, right: 8.0, top: h * 0.005),
+                margin: const EdgeInsets.symmetric(horizontal: 1.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -190,7 +184,7 @@ class _BotChatState extends State<BotChat> {
                         child:
                             normalField('Add Message', false, messageInsert)),
                     IconButton(
-                      icon: const Icon(Icons.mic),
+                      icon: const Icon(Icons.mic, size: 25.0),
                       onPressed: () async {
                         await _listen();
                       },
@@ -202,7 +196,7 @@ class _BotChatState extends State<BotChat> {
                       child: IconButton(
                           icon: const Icon(
                             Icons.send,
-                            size: 20.0,
+                            size: 25.0,
                           ),
                           onPressed: () {
                             if (messageInsert.text.isEmpty) {

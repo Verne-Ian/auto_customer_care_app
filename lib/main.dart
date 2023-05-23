@@ -2,6 +2,7 @@
 import 'package:auto_customer_care/services/auth.dart';
 import 'package:auto_customer_care/viewable/ambulance.dart';
 import 'package:auto_customer_care/viewable/appointment.dart';
+import 'package:auto_customer_care/viewable/chatDoctor.dart';
 
 import '../viewable/chatpage.dart';
 import '../viewable/home.dart';
@@ -29,6 +30,7 @@ void main() async {
       '/sign': (context) => const SignUp(),
       '/login': (context) => const LoginScreen(),
       '/chat': (context) => const BotChat(),
+      '/doc': (context) => const DocChat(),
       '/auth': (context) => const Auth(),
       '/ambie': (context) => const AmbulanceRequestPage(),
       '/appoint': (context) => const AppointmentForm()

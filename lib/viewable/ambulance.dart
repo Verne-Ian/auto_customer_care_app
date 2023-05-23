@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,51 +13,68 @@ class AmbulanceRequestPage extends StatefulWidget {
 
 class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _contactController = TextEditingController();
-  final _locationController = TextEditingController();
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _contactController.dispose();
-    _locationController.dispose();
-    super.dispose();
-  }
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final User? currentUser = FirebaseAuth.instance.currentUser;
 
-  void _submitRequest() async {
+  Future<void> _submitRequest() async {
     if (_formKey.currentState!.validate()) {
-      final name = _nameController.text;
-      final contact = _contactController.text;
-      final location = _locationController.text;
 
-      final ambulanceRequest = {
-        'name': name,
-        'location': location,
-        'contact': contact,
-        'status': 'Pending',
-        'timestamp': FieldValue.serverTimestamp(),
-      };
+      try {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        firestore.collection('ambulance_requests').add({
+          'name': currentUser?.displayName,
+          'location': _locationController.text,
+          'contact': _contactController.text,
+          'status': 'Pending',
+          'timestamp': FieldValue.serverTimestamp(),
+        }).then((value){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Ambulance request submitted!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }).onError((error, stackTrace){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to submit ambulance request. Please try again later.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        });
 
-      await FirebaseFirestore.instance
-          .collection('ambulance_requests')
-          .add(ambulanceRequest);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Failed to submit ambulance request. Please try again later.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ambulance request submitted!'),
-        ),
-      );
     }
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
     final appBar = AppBar(
-      title: const Text('Ambulance Request'),
+      title: const Text('Ambulance Request from',
+          style: TextStyle(color: Colors.white),),
       backgroundColor: Colors.black54,
+      centerTitle: true,
     );
     final formHeight = screenHeight -
         appBar.preferredSize.height -
@@ -66,82 +85,68 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                constraints: const BoxConstraints(
-                  maxWidth: 500,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        'Request an ambulance',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text('${currentUser?.displayName}',
+                      style: const TextStyle(color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25.0),),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: _locationController,
+                    decoration: const InputDecoration(
+                      labelText: 'Location',
+                      border: OutlineInputBorder(),
                     ),
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Patient Name',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '${FirebaseAuth.instance.currentUser?.displayName}';
-                        }
-                        return null;
-                      },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the patient's location";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: _contactController,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(),
                     ),
-                    const SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _locationController,
-                      decoration: const InputDecoration(
-                        labelText: 'Location',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter the patient's location";
-                        }
-                        return null;
-                      },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter caretaker's contact";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16.0),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: (){
+                        _submitRequest();
+                        _locationController.clear();
+                        _contactController.clear();
+
+                        },
+                      child: const Text('Request'),
                     ),
-                    const SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _contactController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter caretaker's contact";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: (){
-                          _submitRequest;
-                          //_nameController.clear();
-                          _locationController.clear();
-                          _contactController.clear();
-                          },
-                        child: const Text('Request'),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

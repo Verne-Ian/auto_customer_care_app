@@ -30,8 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
     try {
       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) => Navigator.pop(context));
+          .signInWithEmailAndPassword(email: email, password: password);
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
@@ -57,6 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -98,9 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 240,
                           height: 70.0,
                           child: Text(
-                            "Hello there, Welcome to SpenCare Support App Please Log In to use our services",
+                            "Hello there, Welcome to SpenCare Support App Please Log In to use our quality health assistance services",
                             style:
-                                TextStyle(color: Colors.white, fontSize: 14.0),
+                                TextStyle(color: Colors.white, fontSize: 12.0),
                           ),
                         ),
                         const SizedBox(

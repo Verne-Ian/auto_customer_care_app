@@ -35,14 +35,14 @@ class Login {
       }
     } else {
       //beginning the sign in process
-      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount gUser = await GoogleSignIn().signIn();
 
-      //Obataining the Authentication details from the Google sign in Request
-      final GoogleSignInAuthentication? gAuth = await gUser?.authentication;
+      //Obtaining the Authentication details from the Google sign in Request
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
       //Creates a new credential for the user
       final credential = GoogleAuthProvider.credential(
-          accessToken: gAuth?.accessToken, idToken: gAuth?.idToken);
+          accessToken: gAuth.accessToken, idToken: gAuth.idToken);
 
       //This will sign in the user
       final appUser =
@@ -53,15 +53,15 @@ class Login {
 }
 
 class MyUser {
-  final String id;
-  final String name;
-  final String imageUrl;
+  late String _id;
+  late String _name;
+  late String _imageUrl;
+
 
   MyUser({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-  });
+    required String id,
+    required String name, required String imageUrl
+  }): _id = id, _name = name, _imageUrl = imageUrl;
 
   factory MyUser.fromFirebaseUser(User firebaseUser) {
     return MyUser(
@@ -69,6 +69,24 @@ class MyUser {
       name: firebaseUser.displayName ?? '',
       imageUrl: firebaseUser.photoURL ?? '',
     );
+  }
+
+  String get imageUrl => _imageUrl;
+
+  set imageUrl(String value) {
+    _imageUrl = value;
+  }
+
+  String get id => _id;
+
+  set id(String value) {
+    _id = value;
+  }
+
+  String get name => _name;
+
+  set name(String value) {
+    _name = value;
   }
 }
 
@@ -93,9 +111,9 @@ class Message {
       'text': text,
       'imageUrl': imageUrl,
       'sender': {
-        'id': sender.id,
-        'name': sender.name,
-        'imageUrl': sender.imageUrl,
+        'id': sender._id,
+        'name': sender._name,
+        'imageUrl': sender._imageUrl,
       },
       'time': time,
     };
