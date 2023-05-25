@@ -30,8 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
     try {
       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      Navigator.pop(context);
+          .signInWithEmailAndPassword(email: email, password: password).then((value) => Navigator.pop(context));
+
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 

@@ -35,10 +35,10 @@ class Login {
       }
     } else {
       //beginning the sign in process
-      final GoogleSignInAccount gUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
       //Obtaining the Authentication details from the Google sign in Request
-      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 
       //Creates a new credential for the user
       final credential = GoogleAuthProvider.credential(

@@ -1,3 +1,4 @@
+import 'package:auto_customer_care/viewable/chatDoctor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -25,6 +26,7 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     var currentUser = FirebaseAuth.instance.currentUser;
+    String senderId = currentUser!.uid;
     // ignore: unused_local_variable
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -82,7 +84,6 @@ class _MyHomeState extends State<MyHome> {
                           newChatButton(context, Ionicons.car, false, () {
                             Navigator.pushNamed(context, '/ambie');
                           }, 'Request Ambulance')),
-
                     ],
                   ),
                   Row(
@@ -101,7 +102,11 @@ class _MyHomeState extends State<MyHome> {
                       Expanded(
                           flex: 1,
                           child: newChatButton(context, Ionicons.person, false, () {
-                            Navigator.pushNamed(context, '/doc');
+                            String receiverId = 'DC-2023';
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId)));
                           }, 'Doctor')),
                     ],
                   ),
@@ -112,7 +117,11 @@ class _MyHomeState extends State<MyHome> {
                           flex: 1,
                           child:
                           newChatButton(context, Ionicons.car, false, () {
-                            Navigator.pushNamed(context, '/ambie');
+                            String receiverId = 'DT-2023';
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId)));
                           }, 'Dentist')),
                       const SizedBox(
                         width: 10.0,
@@ -121,7 +130,11 @@ class _MyHomeState extends State<MyHome> {
                         flex: 1,
                         child: newChatButton(
                             context, Ionicons.book_outline, true, () {
-                          Navigator.pushNamed(context, '/appoint');
+                          String receiverId = 'PY-2023';
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DocChat(senderId: senderId, receiverId: receiverId)));
                         }, 'Physician'),
                       )
                     ],
