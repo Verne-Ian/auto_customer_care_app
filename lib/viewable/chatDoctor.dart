@@ -7,7 +7,8 @@ import '../addons/buttons&fields.dart';
 class DocChat extends StatefulWidget {
   final String senderId;
   final String receiverId;
-  const DocChat({Key? key, required this.senderId, required this.receiverId}) : super(key: key);
+  final String proName;
+  const DocChat({Key? key, required this.senderId, required this.receiverId, required this.proName}) : super(key: key);
 
   @override
   State<DocChat> createState() => _DocChatState();
@@ -50,7 +51,7 @@ class _DocChatState extends State<DocChat> {
 
     return Scaffold(
         appBar: AppBar(
-        title: const Text('HealthCare Assistant'),
+        title:  Text(widget.proName),
     ),
       body: Column(
         children: [
@@ -64,9 +65,7 @@ class _DocChatState extends State<DocChat> {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
-                }
-
-                if (!snapshot.hasData) {
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return Center(
                     child: SizedBox(
                       width: w * 0.95,
@@ -113,30 +112,34 @@ class _DocChatState extends State<DocChat> {
                       ),
                     ),
                   );
+                }else {
+                  return ListView.builder(
+                    reverse: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var messageData = snapshot.data!.docs[index]
+                          .data() as Map<String, dynamic>;
+                      var message = messageData['message'] ?? '';
+                      var data = messageData['senderId'] == widget.senderId
+                          ? 1
+                          : 0;
+                      return chat(message, data);
+                    },
+                  );
                 }
-
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    var messageData = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                    var message = messageData['message'] ?? '';
-                    var data = messageData['senderId'] == widget.senderId ? 1 : 0;
-                    return chat(message, data);
-                  },
-                );
               },
             ),
           ),
           Container(
             padding: EdgeInsets.only(
-                left: 8.0, right: 8.0, top: h * 0.005),
+                left: 8.0, right: 8.0, top: h * 0.005, bottom: h*0.005),
             margin: const EdgeInsets.symmetric(horizontal: 1.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Flexible(
                     child: normalField('Add Message', false, messageText)),
+                SizedBox(width: w * 0.02,),
                 Container(
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
