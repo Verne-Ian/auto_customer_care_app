@@ -28,7 +28,7 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
           'name': currentUser?.displayName,
           'location': _locationController.text,
           'contact': _contactController.text,
-          'status': 'Pending',
+          'status': 'Ongoing',
           'timestamp': FieldValue.serverTimestamp(),
         }).then((value){
           ScaffoldMessenger.of(context).showSnackBar(
@@ -85,72 +85,108 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-            child: Container(
-              constraints: const BoxConstraints(
-                maxWidth: 500,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text('${currentUser?.displayName}',
-                      style: const TextStyle(color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25.0),),
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _locationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Location',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter the patient's location";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _contactController,
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter caretaker's contact";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: (){
-                        _submitRequest();
-                        _locationController.clear();
-                        _contactController.clear();
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('ambulance_requests')
+            .where('name', isEqualTo: currentUser?.displayName)
+            .where('status', isEqualTo: 'Ongoing')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final requests = snapshot.data!.docs;
+            if (requests.isNotEmpty) {
+              // User has pending or ongoing requests
+              return ListView.builder(
+                itemCount: requests.length,
+                itemBuilder: (context, index) {
+                  final request = requests[index].data() as Map<String, dynamic>;
+                  final status = request['status'] ?? '';
+                  final location = request['location'] ?? '';
+                  final contact = request['contact'] ?? '';
 
-                        },
-                      child: const Text('Request'),
+                  return ListTile(
+                    title: Text('Request: $status'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Location: $location'),
+                        Text('Contact: $contact'),
+                      ],
                     ),
+                  );
+                },
+              );
+            }
+          }
+
+          // Display the form when there are no pending or ongoing requests
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 500,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Text(
+                          '${currentUser?.displayName}',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        controller: _locationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Location',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter the patient's location";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        controller: _contactController,
+                        decoration: const InputDecoration(
+                          labelText: 'Phone Number',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter caretaker's contact";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16.0),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _submitRequest,
+                          child: const Text('Request'),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
