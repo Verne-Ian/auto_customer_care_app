@@ -106,7 +106,7 @@ class _MyHomeState extends State<MyHome> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId)));
+                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Doctor')));
                           }, 'Doctor')),
                     ],
                   ),
@@ -121,7 +121,7 @@ class _MyHomeState extends State<MyHome> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId)));
+                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Dentist')));
                           }, 'Dentist')),
                       const SizedBox(
                         width: 10.0,
@@ -134,7 +134,7 @@ class _MyHomeState extends State<MyHome> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DocChat(senderId: senderId, receiverId: receiverId)));
+                                  builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Physician')));
                         }, 'Physician'),
                       )
                     ],
