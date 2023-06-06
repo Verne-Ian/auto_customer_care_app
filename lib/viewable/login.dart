@@ -14,45 +14,47 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
 
-  void emailLogin(String email, String password) async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: SpinKitDualRing(
-              color: Colors.white70,
-              size: 30.0,
-            ),
-          );
-        });
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password).then((value) => Navigator.pop(context));
-
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-
-      if (e.code == 'user-not-found') {
+  Future<void> emailLogin(String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      try {
         showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
-                title: Text('User Not Found'),
+              return const Center(
+                child: SpinKitDualRing(
+                  color: Colors.white70,
+                  size: 30.0,
+                ),
               );
             });
-        emailControl.text = '';
-      } else if (e.code == 'wrong-password') {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const AlertDialog(
-                title: Text('Wrong Password'),
-              );
-            });
-        passControl.text = '';
+        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).then((value) => Navigator.pop(context));
+
+      } on FirebaseAuthException catch (e) {
+        Navigator.pop(context);
+
+        if (e.code == 'user-not-found') {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text('User Not Found'),
+                );
+              });
+          emailControl.text = '';
+        } else if (e.code == 'wrong-password') {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text('Wrong Password'),
+                );
+              });
+          passControl.text = '';
+        }
       }
     }
   }
@@ -93,79 +95,79 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: w * 0.03, right: w * 0.03),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const SizedBox(
-                          width: 240,
-                          height: 70.0,
-                          child: Text(
-                            "Hello there, Welcome to SpenCare Support App Please Log In to use our quality health assistance services",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        defaultField('Email', Icons.email_rounded, false,
-                            emailControl, ''),
-                        const SizedBox(
-                          height: 12.0,
-                        ),
-                        otherField('Enter Password', Icons.password, true,
-                            passControl),
-                        const SizedBox(
-                          height: 8.0,
-                        ),
-                        loginSignUpButton(context, true, () {
-                          if (emailControl.text.isNotEmpty &&
-                              passControl.text.isNotEmpty) {
-                            emailLogin(emailControl.text, passControl.text);
-                          } else if (emailControl.text.isEmpty ||
-                              passControl.text.isEmpty) {}
-                        }),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Expanded(
-                              child: Divider(
-                                color: Colors.white,
-                                height: 5.0,
-                                thickness: 2.0,
-                                indent: 15.0,
+                          SizedBox(
+                            width: w * 0.8,
+                            height: h * 0.10,
+                            child: Text(
+                              "Hello there, Welcome to SpenCare Support App Please Log In to use our quality health assistance services",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: w * 0.032),
+                            ),
+                          ),
+                          otherField('Email', Icons.email_rounded, false,
+                              emailControl),
+                          const SizedBox(
+                            height: 12.0,
+                          ),
+                          otherField('Enter Password', Icons.password, true,
+                              passControl),
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                          loginSignUpButton(context, true, () {
+                            if (emailControl.text.isNotEmpty &&
+                                passControl.text.isNotEmpty) {
+                              emailLogin(emailControl.text, passControl.text);
+                            } else if (emailControl.text.isEmpty ||
+                                passControl.text.isEmpty) {}
+                          }),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Expanded(
+                                child: Divider(
+                                  color: Colors.white,
+                                  height: 5.0,
+                                  thickness: 2.0,
+                                  indent: 15.0,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            SizedBox(
-                              width: 30.0,
-                              child: Text(
-                                "OR",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                              SizedBox(
+                                width: 10.0,
                               ),
-                            ),
-                            Expanded(
-                              child: Divider(
-                                color: Colors.white,
-                                height: 5.0,
-                                thickness: 2.0,
-                                endIndent: 15.0,
+                              SizedBox(
+                                width: 30.0,
+                                child: Text(
+                                  "OR",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        GoogleSignUpButton(context, Ionicons.logo_google, true,
-                            () {
-                          Login.googleLogin();
-                        }),
-                        signUpOption()
-                      ],
+                              Expanded(
+                                child: Divider(
+                                  color: Colors.white,
+                                  height: 5.0,
+                                  thickness: 2.0,
+                                  endIndent: 15.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          GoogleSignUpButton(context, Ionicons.logo_google, true,
+                              () {
+                            Login.googleLogin();
+                          }),
+                          signUpOption()
+                        ],
+                      ),
                     ),
                   ),
                 ],

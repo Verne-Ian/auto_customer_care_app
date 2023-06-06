@@ -4,14 +4,21 @@ import 'package:flutter_chat_bubble/chat_bubble.dart';
 ///This can be used if you want custom but similar text fields throughout the app
 ///for number or text fields.
 ///You can edit it's appearance as desired.
-TextField defaultField(String text, IconData icon, bool isDigit,
+TextFormField defaultField(String text, IconData icon, bool isDigit,
     TextEditingController controller, String unit) {
-  return TextField(
+  return TextFormField(
     controller: controller,
     obscureText: isDigit,
     enableSuggestions: isDigit,
     autocorrect: isDigit,
+    cursorHeight: 20.0,
     cursorColor: Colors.white,
+    validator: (value){
+      if (value == null || value.isEmpty) {
+        return 'Please enter your $text';
+      }
+      return null;
+    },
     style: TextStyle(color: Colors.white.withOpacity(0.9)),
     decoration: InputDecoration(
       prefixIcon: Icon(
@@ -20,17 +27,17 @@ TextField defaultField(String text, IconData icon, bool isDigit,
       ),
       suffixText: unit,
       suffixStyle: const TextStyle(
-          color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 20.0),
+          color: Colors.white70, fontWeight: FontWeight.bold),
       labelText: text,
       labelStyle: const TextStyle(color: Colors.white70),
       filled: true,
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.white, width: 2)),
+          borderSide: const BorderSide(color: Colors.white, width: 1)),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       floatingLabelStyle:
           const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      fillColor: Colors.black.withOpacity(0.4),
+      fillColor: Colors.black.withOpacity(0.2),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(
@@ -45,14 +52,21 @@ TextField defaultField(String text, IconData icon, bool isDigit,
 ///This can be used if you want custom but similar text fields throughout the app
 ///for password or email fields.
 ///You can edit it's appearance as desired.
-TextField otherField(String text, IconData icon, bool isPassword,
+TextFormField otherField(String text, IconData icon, bool isPassword,
     TextEditingController controller) {
-  return TextField(
+  return TextFormField(
     controller: controller,
     obscureText: isPassword,
     enableSuggestions: isPassword,
     autocorrect: isPassword,
+    cursorHeight: 20.0,
     cursorColor: Colors.white,
+    validator: (value){
+      if (value == null || value.isEmpty) {
+        return 'Please enter your $text';
+      }
+      return null;
+    },
     style: TextStyle(color: Colors.white.withOpacity(0.9)),
     decoration: InputDecoration(
       prefixIcon: Icon(
@@ -64,16 +78,16 @@ TextField otherField(String text, IconData icon, bool isPassword,
       filled: true,
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.white, width: 2)),
+          borderSide: const BorderSide(color: Colors.white, width: 1)),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       floatingLabelStyle: const TextStyle(color: Colors.white),
-      fillColor: Colors.black.withOpacity(0.4),
+      fillColor: Colors.black.withOpacity(0.2),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(
               width: 0,
               style: BorderStyle.solid,
-              color: Colors.black.withOpacity(0.3))),
+              color: Colors.black.withOpacity(0.1))),
     ),
     keyboardType:
         isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
@@ -97,18 +111,18 @@ LayoutBuilder normalField(
         hintStyle: const TextStyle(color: Colors.black26, fontSize: 16.0),
         filled: true,
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            borderSide: const BorderSide(color: Colors.white, width: 2)),
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: const BorderSide(color: Colors.white, width: 0)),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         floatingLabelStyle:
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         fillColor: Colors.black.withOpacity(0.1),
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(30.0),
             borderSide: BorderSide(
                 width: 0,
                 style: BorderStyle.solid,
-                color: Colors.blueGrey.withOpacity(0.3))),
+                color: Colors.blueGrey.withOpacity(0.1))),
       ),
       keyboardType: isDigit ? TextInputType.number : TextInputType.text,
     );
@@ -228,7 +242,7 @@ Container newChatButton(
     BuildContext context, IconData icons, bool isBot, Function onTap, String text) {
   return Container(
     width: MediaQuery.of(context).size.width * 0.45,
-    height: 120,
+    height: MediaQuery.of(context).size.height * 0.15,
     margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
     child: ElevatedButton.icon(
@@ -246,62 +260,110 @@ Container newChatButton(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
       icon: Icon(
         icons,
-        color: Colors.green,
+        color: Colors.black54,
         size: 30.0,
       ),
       label: Text(
         text,
-        style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
+        style: TextStyle(
+            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width * 0.04),
       ),
     ),
   );
 }
 
-Widget chat(String message, int data) {
+Widget botChat(String message, int data, context) {
+  double w = MediaQuery.of(context).size.width;
+  double h = MediaQuery.of(context).size.height;
   return Padding(
-    padding: const EdgeInsets.only(bottom: 5.0),
+    padding: data == 0 ? const EdgeInsets.only(bottom: 5.0, right: 15.0) : const EdgeInsets.only(bottom: 5.0, left: 15.0),
     child: ChatBubble(
         backGroundColor: data == 0 ? Colors.indigo : Colors.blueGrey,
         clipper: data == 0
-            ? ChatBubbleClipper2(type: BubbleType.receiverBubble, radius: 10.0)
-            : ChatBubbleClipper2(type: BubbleType.sendBubble, radius: 10.0),
+            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 5.0)
+            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 5.0),
         elevation: 3.0,
         alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
-          children: <Widget>[
-            CircleAvatar(
-              radius: 15.0,
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage(data == 0
-                  ? "assets/images/bot.png"
-                  : "assets/images/user.png"),
-            ),
-            const SizedBox(
-              width: 5.0,
-            ),
-            Flexible(
+        child: Padding(
+          padding: EdgeInsets.zero,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 15.0,
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(data == 0
+                    ? "assets/images/bot.png"
+                    : "assets/images/user.png"),
+              ),
+              const SizedBox(
+                width: 5.0,
+              ),
+              Flexible(
+                child: Text(
+                    message,
+                    style: TextStyle(
+                        fontSize: h * 0.02,
+                        color: Colors.white, fontWeight: FontWeight.normal),
+                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: IconButton(
+                    onPressed: (){},
+                    icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_up, color: Colors.white, size: 15.0,)),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: IconButton(
+                    onPressed: (){},
+                    icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_down, color: Colors.white, size: 15.0,)),
+              )
+            ],
+          ),
+        )),
+  );
+}
+
+Widget docChat(String message, int data, context) {
+  double w = MediaQuery.of(context).size.width;
+  double h = MediaQuery.of(context).size.height;
+  return Padding(
+    padding: data == 0 ? const EdgeInsets.only(bottom: 5.0, right: 15.0) : const EdgeInsets.only(bottom: 5.0, left: 15.0),
+    child: ChatBubble(
+        backGroundColor: data == 0 ? Colors.indigo : Colors.blueGrey,
+        clipper: data == 0
+            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 5.0)
+            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 5.0),
+        elevation: 3.0,
+        alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
+        child: Padding(
+          padding: EdgeInsets.zero,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 15.0,
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(data == 0
+                    ? "assets/images/bot.png"
+                    : "assets/images/user.png"),
+              ),
+              const SizedBox(
+                width: 5.0,
+              ),
+              Flexible(
                 child: Text(
                   message,
-                  style: const TextStyle(
-                      fontSize: 12.0,
+                  style: TextStyle(
+                      fontSize: h * 0.02,
                       color: Colors.white, fontWeight: FontWeight.normal),
-                )),
-            Padding(
-              padding: EdgeInsets.zero,
-              child: IconButton(
-                  onPressed: (){},
-                  icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_up, color: Colors.white, size: 15.0,)),
-            ),
-            Padding(
-              padding: EdgeInsets.zero,
-              child: IconButton(
-                  onPressed: (){},
-                  icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_down, color: Colors.white, size: 15.0,)),
-            )
-          ],
+                ),
+              )
+            ],
+          ),
         )),
   );
 }

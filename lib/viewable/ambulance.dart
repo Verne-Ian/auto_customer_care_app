@@ -14,16 +14,15 @@ class AmbulanceRequestPage extends StatefulWidget {
 class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final User? currentUser = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> _submitRequest() async {
     if (_formKey.currentState!.validate()) {
 
       try {
-        FirebaseFirestore firestore = FirebaseFirestore.instance;
         firestore.collection('ambulance_requests').add({
           'name': currentUser?.displayName,
           'location': _locationController.text,
@@ -60,6 +59,27 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
     }
   }
 
+  Future<void> cancel(String docId) async {
+    try {
+      await firestore.collection('ambulance_requests').doc(docId).delete().then((value){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ambulance request canceled.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to cancel request.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+
   @override
   void dispose() {
     super.dispose();
@@ -86,7 +106,7 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
       backgroundColor: Colors.white,
       appBar: appBar,
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
+        stream: firestore
             .collection('ambulance_requests')
             .where('name', isEqualTo: currentUser?.displayName)
             .where('status', isEqualTo: 'Ongoing')
@@ -103,15 +123,38 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
                   final status = request['status'] ?? '';
                   final location = request['location'] ?? '';
                   final contact = request['contact'] ?? '';
+                  final docId = requests[index].id;
 
-                  return ListTile(
-                    title: Text('Request: $status'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Location: $location'),
-                        Text('Contact: $contact'),
-                      ],
+                  return Center(
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text('Request: $status'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Location: $location'),
+                                Text('Contact: $contact'),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Cancel button action
+                                cancel(docId);
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -177,6 +220,15 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _submitRequest,
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.black26;
+                                }
+                                return Colors.black54;
+                              }),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
                           child: const Text('Request'),
                         ),
                       ),

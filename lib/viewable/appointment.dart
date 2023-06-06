@@ -18,11 +18,12 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final User? currentUser = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       try {
-        FirebaseFirestore firestore = FirebaseFirestore.instance;
+
         firestore.collection('appointments').add({
           'name': currentUser?.displayName,
           'phone': _phoneController.text,
@@ -55,6 +56,25 @@ class _AppointmentFormState extends State<AppointmentForm> {
           ),
         );
       }
+    }
+  }
+  Future<void> cancel(String docId) async {
+    try {
+      await firestore.collection('appointments').doc(docId).delete().then((value){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Appointment canceled.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to cancel appointment request.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -97,9 +117,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
         title: const Text('Make Appointment'),
         backgroundColor: Colors.black54,
       ),
-      body: Center(
+      body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
+          stream: firestore
               .collection('appointments')
               .where('name', isEqualTo: currentUser?.displayName)
               .where('status', isEqualTo: 'Pending')
@@ -115,39 +135,41 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     final appointment = appointments[index].data() as Map<String, dynamic>;
                     final status = appointment['status'] ?? '';
                     final name = appointment['name'] ?? '';
-                    final phone = appointment['phone'] ?? '';
                     final date = appointment['date'] ?? '';
                     final time = appointment['time'] ?? '';
+                    final docId = appointments[index].id;
 
-                    return Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text('Appointment Request: $status'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Name: $name'),
-                                Text('Phone: $phone'),
-                                Text('Date: $date'),
-                                Text('Time: $time'),
-                              ],
+                    return Center(
+                      child: Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text('Appointment Request: $status'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Name: $name'),
+                                  Text('Date: $date'),
+                                  Text('Time: $time'),
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Cancel button action
-                              },
-                              child: const Text('Cancel'),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Cancel button action
+                                  cancel(docId);
+                                },
+                                child: const Text('Cancel'),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -240,6 +262,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: _submitForm,
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.black26;
+                              }
+                              return Colors.black54;
+                            }),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
                         child: const Text('Submit'),
                       ),
                     ],

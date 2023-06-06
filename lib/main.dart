@@ -3,10 +3,8 @@ import 'package:auto_customer_care/services/auth.dart';
 import 'package:auto_customer_care/viewable/ambulance.dart';
 import 'package:auto_customer_care/viewable/appointment.dart';
 import 'package:auto_customer_care/viewable/chatDoctor.dart';
-
 import '../viewable/chatpage.dart';
 import '../viewable/home.dart';
-import '../viewable/loadingScreen.dart';
 import '../viewable/login.dart';
 import '../viewable/signup.dart';
 
@@ -22,10 +20,9 @@ void main() async {
   );
 
   runApp(MaterialApp(
+    themeMode: ThemeMode.system,
     home: const Auth(),
-    //initialRoute: '/load',
     routes: {
-      '/load': (context) => const Loading(),
       '/home': (context) => const MyHome(),
       '/sign': (context) => const SignUp(),
       '/login': (context) => const LoginScreen(),

@@ -50,8 +50,10 @@ class _DocChatState extends State<DocChat> {
     double h = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
-        title:  Text(widget.proName),
+          backgroundColor: Colors.black54,
+          title:  Text(widget.proName),
     ),
       body: Column(
         children: [
@@ -70,44 +72,46 @@ class _DocChatState extends State<DocChat> {
                     child: SizedBox(
                       width: w * 0.95,
                       height: h * 0.3,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        color: Colors.white,
-                        elevation: 10.0,
-                        shadowColor: Colors.black.withOpacity(0.5),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(w * 0.1, h * 0.1, w * 0.1, h * 0.02),
-                              child: const Text(
-                                'Ask me something!',
-                                style: TextStyle(fontSize: 25.0),
+                      child: SingleChildScrollView(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          color: Colors.white,
+                          elevation: 10.0,
+                          shadowColor: Colors.black.withOpacity(0.5),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(w * 0.1, h * 0.1, w * 0.1, h * 0.02),
+                                child: const Text(
+                                  'Ask me something!',
+                                  style: TextStyle(fontSize: 25.0),
+                                ),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton.icon(
-                                  onPressed: () {
-                                    // handle the first button press
-                                    Navigator.pushNamed(context, '/ambie');
-                                  },
-                                  icon: const Icon(Ionicons.alert),
-                                  label: const Text('Ambulance'),
-                                ),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    // handle the second button press
-                                    Navigator.pushNamed(context, '/appoint');
-                                  },
-                                  icon: const Icon(Icons.book),
-                                  label: const Text('Make Appointment'),
-                                ),
-                              ],
-                            ),
-                          ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      // handle the first button press
+                                      Navigator.pushNamed(context, '/ambie');
+                                    },
+                                    icon: const Icon(Ionicons.alert),
+                                    label: const Text('Ambulance'),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      // handle the second button press
+                                      Navigator.pushNamed(context, '/appoint');
+                                    },
+                                    icon: const Icon(Icons.book),
+                                    label: const Text('Make Appointment'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -123,7 +127,7 @@ class _DocChatState extends State<DocChat> {
                       var data = messageData['senderId'] == widget.senderId
                           ? 1
                           : 0;
-                      return chat(message, data);
+                      return docChat(message, data, context);
                     },
                   );
                 }
@@ -133,7 +137,7 @@ class _DocChatState extends State<DocChat> {
           Container(
             padding: EdgeInsets.only(
                 left: 8.0, right: 8.0, top: h * 0.005, bottom: h*0.005),
-            margin: const EdgeInsets.symmetric(horizontal: 1.0),
+            margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -143,9 +147,10 @@ class _DocChatState extends State<DocChat> {
                 Container(
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
-                      color: Colors.orange, shape: BoxShape.circle),
+                      color: Colors.black54, shape: BoxShape.circle),
                   child: IconButton(
                       icon: const Icon(
+                        color: Colors.white,
                         Icons.send,
                         size: 25.0,
                       ),

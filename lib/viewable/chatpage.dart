@@ -88,33 +88,26 @@ class _BotChatState extends State<BotChat> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: w * 1.0),
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            centerTitle: true,
-            toolbarHeight: 60,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(0),
-                  topRight: Radius.circular(0),
-                  topLeft: Radius.circular(0)),
-            ),
-            elevation: 10,
-            title: const Text("Quick Help"),
-          ),
-          body: Column(
-            children: <Widget>[
-              Flexible(
-                child: messages.isEmpty
-                    ? Center(
-                  child: SizedBox(
-                    width: w * 0.95,
-                    height: h * 0.3,
+    return Container(
+      constraints: BoxConstraints(maxWidth: w * 1.0),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.black54,
+          centerTitle: true,
+          toolbarHeight: 60,
+          elevation: 10,
+          title: const Text("Quick Help"),
+        ),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messages.isEmpty
+                  ? Center(
+                child: SizedBox(
+                  width: w * 0.95,
+                  height: h * 0.3,
+                  child: SingleChildScrollView(
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0),
@@ -156,69 +149,70 @@ class _BotChatState extends State<BotChat> {
                       ),
                     ),
                   ),
+                ),
 
-                )
-                    : ListView.builder(
-                  reverse: true,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    //final data = messages[index];
-                    return chat(messages[index]["message"].toString(),
-                        messages[index]["data"]);
-                  },
-                ),
-              ),
-              const Divider(
-                height: 8.0,
-                indent: 10.0,
-                endIndent: 10.0,
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                    left: 8.0, right: 8.0, top: h * 0.005),
-                margin: const EdgeInsets.symmetric(horizontal: 1.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Flexible(
-                        child:
-                            normalField('Add Message', false, messageInsert)),
-                    IconButton(
-                      icon: const Icon(Icons.mic, size: 25.0),
-                      onPressed: () async {
-                        await _listen();
-                      },
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                          color: Colors.orange, shape: BoxShape.circle),
-                      child: IconButton(
-                          icon: const Icon(
-                            Icons.send,
-                            size: 25.0,
-                          ),
-                          onPressed: () {
-                            if (messageInsert.text.isEmpty) {
-                              print("empty message");
-                            } else {
-                              setState(() {
-                                messages.insert(0,
-                                    {"data": 1, "message": messageInsert.text});
-                              });
-                              response(messageInsert.text);
-                              messageInsert.clear();
-                            }
-                          }),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15.0,
               )
-            ],
-          ),
+                  : ListView.builder(
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  //final data = messages[index];
+                  return botChat(messages[index]["message"].toString(),
+                      messages[index]["data"], context);
+                },
+              ),
+            ),
+            const Divider(
+              height: 8.0,
+              indent: 10.0,
+              endIndent: 10.0,
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                  left: 8.0, right: 8.0, top: h * 0.005),
+              margin: const EdgeInsets.symmetric(horizontal: 0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Flexible(
+                      child:
+                          normalField('Add Message', false, messageInsert)),
+                  IconButton(
+                    icon: const Icon(Icons.mic, size: 25.0),
+                    onPressed: () async {
+                      await _listen();
+                    },
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        color: Colors.black54, shape: BoxShape.circle),
+                    child: IconButton(
+                        icon: const Icon(
+                          color: Colors.white,
+                          Icons.send,
+                          size: 25.0,
+                        ),
+                        onPressed: () {
+                          if (messageInsert.text.isEmpty) {
+                            print("empty message");
+                          } else {
+                            setState(() {
+                              messages.insert(0,
+                                  {"data": 1, "message": messageInsert.text});
+                            });
+                            response(messageInsert.text);
+                            messageInsert.clear();
+                          }
+                        }),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 5.0,
+            )
+          ],
         ),
       ),
     );

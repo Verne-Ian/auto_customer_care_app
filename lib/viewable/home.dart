@@ -41,14 +41,14 @@ class _MyHomeState extends State<MyHome> {
           appBar: AppBar(
             backgroundColor: Colors.black54,
             title: const Text(
-              'SpecanCare Support ',
+              'SpenCare Support ',
               style: TextStyle(fontSize: 20.0, color: Colors.white),
             ),
             centerTitle: true,
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(w * 0.02, h * 0.03, w * 0.02, h * 0.1),
+              padding: EdgeInsets.fromLTRB(w * 0.01, h * 0.03, w * 0.01, h * 0.1),
               child: Column(
                 children: [
                   FutureBuilder<User>(
@@ -59,7 +59,7 @@ class _MyHomeState extends State<MyHome> {
                         return Text('Hello there, $userName!');
                       } else {
                         return const SpinKitDualRing(
-                          color: Colors.green,
+                          color: Colors.black54,
                           size: 15.0,
                         );
                       }
@@ -68,75 +68,58 @@ class _MyHomeState extends State<MyHome> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: newChatButton(
-                            context, Icons.live_help_rounded, true, () {
-                          Navigator.pushNamed(context, '/chat');
-                        }, 'Quick Help'),
-                      ),
+                      newChatButton(
+                          context, Icons.live_help_rounded, true, () {
+                        Navigator.pushNamed(context, '/chat');
+                      }, 'Quick Help'),
                       const SizedBox(
                         width: 10.0,
                       ),
-                      Expanded(
-                          flex: 1,
-                          child:
-                          newChatButton(context, Ionicons.car, false, () {
-                            Navigator.pushNamed(context, '/ambie');
-                          }, 'Request Ambulance')),
+                      newChatButton(context, Ionicons.car, false, () {
+                        Navigator.pushNamed(context, '/ambie');
+                      }, 'Request Ambulance'),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: newChatButton(
-                            context, Ionicons.book_outline, true, () {
-                          Navigator.pushNamed(context, '/appoint');
-                        }, 'Make Appointment'),
-                      ),
+                      newChatButton(
+                          context, Ionicons.book_outline, true, () {
+                        Navigator.pushNamed(context, '/appoint');
+                      }, 'Make Appointment'),
                       const SizedBox(
                         width: 10.0,
                       ),
-                      Expanded(
-                          flex: 1,
-                          child: newChatButton(context, Ionicons.person, false, () {
-                            String receiverId = 'DC-2023';
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Doctor')));
-                          }, 'Doctor')),
+                      newChatButton(context, Ionicons.person, false, () {
+                        String receiverId = 'DC-2023';
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Doctor')));
+                      }, 'Doctor'),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                          flex: 1,
-                          child:
-                          newChatButton(context, Ionicons.car, false, () {
-                            String receiverId = 'DT-2023';
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Dentist')));
-                          }, 'Dentist')),
+                      newChatButton(context, Ionicons.car, false, () {
+                        String receiverId = 'DT-2023';
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Dentist')));
+                      }, 'Dentist'),
                       const SizedBox(
                         width: 10.0,
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: newChatButton(
-                            context, Ionicons.book_outline, true, () {
-                          String receiverId = 'PY-2023';
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Physician')));
-                        }, 'Physician'),
-                      )
+                      newChatButton(
+                          context, Ionicons.book_outline, true, () {
+                        String receiverId = 'PY-2023';
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DocChat(senderId: senderId, receiverId: receiverId, proName: 'Chat with the Physician')));
+                      }, 'Physician')
                     ],
                   ),
                   /*TextButton(
