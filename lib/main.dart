@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:auto_customer_care/services/auth.dart';
+import 'package:auto_customer_care/viewable/AddProfilePic.dart';
 import 'package:auto_customer_care/viewable/ambulance.dart';
 import 'package:auto_customer_care/viewable/appointment.dart';
 import 'package:auto_customer_care/viewable/chatDoctor.dart';
@@ -12,6 +13,7 @@ import '../viewable/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
+import 'viewable/userProfile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +32,9 @@ void main() async {
       '/doc': (context) => const DocChat(),
       '/auth': (context) => const Auth(),
       '/ambie': (context) => const AmbulanceRequestPage(),
-      '/appoint': (context) => const AppointmentForm()
+      '/appoint': (context) => const AppointmentForm(),
+      '/userProfile': (context) => const UserProfile(),
+      '/addProfilePic': (context) => const AddProfilePic()
     },
   ));
 }

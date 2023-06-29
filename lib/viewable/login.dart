@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../addons/buttons&fields.dart';
@@ -18,46 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
 
-  Future<void> emailLogin(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: SpinKitDualRing(
-                  color: Colors.white70,
-                  size: 30.0,
-                ),
-              );
-            });
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).then((value) => Navigator.pop(context));
 
-      } on FirebaseAuthException catch (e) {
-        Navigator.pop(context);
-
-        if (e.code == 'user-not-found') {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return const AlertDialog(
-                  title: Text('User Not Found'),
-                );
-              });
-          emailControl.text = '';
-        } else if (e.code == 'wrong-password') {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return const AlertDialog(
-                  title: Text('Wrong Password'),
-                );
-              });
-          passControl.text = '';
-        }
-      }
-    }
-  }
 
   @override
   void dispose() {
@@ -71,24 +30,41 @@ class _LoginScreenState extends State<LoginScreen> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints: BoxConstraints(maxWidth: w * 1.0),
+        constraints: BoxConstraints(maxWidth: w),
         child: Scaffold(
-          backgroundColor: Colors.blueGrey[900],
+          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(w * 0.0, 0.0, w * 0.0, h * 0.01),
+              padding: EdgeInsets.fromLTRB(w * 0.0, h * 0.15, w * 0.0, h * 0.0),
               child: Column(
                 children: [
-                  Container(
-                    width: w,
-                    height: h * 0.5,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          opacity: 0.9,
-                          image: AssetImage("assets/images/SpenCare.png"),
-                          fit: BoxFit.cover),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: w * 0.3,
+                        height: w * 0.3,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              opacity: 0.9,
+                              image: AssetImage("assets/images/hospital.png"),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                      const SizedBox(width: 10.0,),
+                      SizedBox(
+                        width: w*0.3,
+                        child: Text(
+                          "M & S General Clinic",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              height: 0.8,
+                              color: Colors.black54, fontSize: w * 0.065, fontFamily: 'DancingScript'),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 12.0,
@@ -102,14 +78,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          SizedBox(
-                            width: w * 0.8,
-                            height: h * 0.10,
-                            child: Text(
-                              "Hello there, Welcome to SpenCare Support App Please Log In to use our quality health assistance services",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: w * 0.032),
-                            ),
+                          Text(
+                            "Login",
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: w * 0.09, fontFamily: 'DancingScript'),
+                          ),
+                          const SizedBox(
+                            height: 20,
                           ),
                           otherField('Email', Icons.email_rounded, false,
                               emailControl),
@@ -122,18 +97,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 8.0,
                           ),
                           loginSignUpButton(context, true, () {
-                            if (emailControl.text.isNotEmpty &&
-                                passControl.text.isNotEmpty) {
-                              emailLogin(emailControl.text, passControl.text);
-                            } else if (emailControl.text.isEmpty ||
-                                passControl.text.isEmpty) {}
+                              if (_formKey.currentState!.validate()) {
+                                Login.emailLogin(emailControl, passControl, emailControl.text, passControl.text, context);
+                              }
                           }),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   height: 5.0,
                                   thickness: 2.0,
                                   indent: 15.0,
@@ -147,13 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   "OR",
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   height: 5.0,
                                   thickness: 2.0,
                                   endIndent: 15.0,
@@ -165,7 +138,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               () {
                             Login.googleLogin();
                           }),
-                          signUpOption()
+                          signUpOption(),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
                         ],
                       ),
                     ),
@@ -183,14 +159,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('First time here?', style: TextStyle(color: Colors.white70)),
+        const Text('First time here?', style: TextStyle(color: Colors.black54)),
         GestureDetector(
           onTap: () {
             Navigator.pushReplacementNamed(context, '/sign');
           },
           child: const Text(
             'Create Account',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         )
       ],

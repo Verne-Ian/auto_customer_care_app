@@ -1,5 +1,51 @@
+import 'package:auto_customer_care/addons/video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+
+import 'audio.dart';
+
+TextFormField profileField(String text, IconData icon, bool isDigit,
+    TextEditingController controller, bool edit) {
+  return TextFormField(
+    readOnly: edit,
+    controller: controller,
+    obscureText: false,
+    enableSuggestions: isDigit == true ? false : true,
+    autocorrect: isDigit == true ? false : true,
+    cursorHeight: 20.0,
+    cursorColor: Colors.black54,
+    validator: (value){
+      if (value == null || value.isEmpty) {
+        return 'Please enter your $text';
+      }
+      return null;
+    },
+    style: TextStyle(color: Colors.black.withOpacity(0.9)),
+    decoration: InputDecoration(
+      prefixIcon: Icon(
+        icon,
+        color: Colors.blueGrey,
+      ),
+      labelText: text,
+      labelStyle: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600,fontSize: 16.0, height: 1.0),
+      filled: true,
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.0),
+          borderSide: const BorderSide(color: Colors.blue, width: 3)),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
+      floatingLabelStyle:
+      const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
+      fillColor: Colors.white.withOpacity(0.3),
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          borderSide: BorderSide(
+              width: 3,
+              style: BorderStyle.solid,
+              color: Colors.blue.withOpacity(0.5))),
+    ),
+    keyboardType: isDigit ? TextInputType.phone : TextInputType.text,
+  );
+}
 
 ///This can be used if you want custom but similar text fields throughout the app
 ///for number or text fields.
@@ -8,44 +54,44 @@ TextFormField defaultField(String text, IconData icon, bool isDigit,
     TextEditingController controller, String unit) {
   return TextFormField(
     controller: controller,
-    obscureText: isDigit,
-    enableSuggestions: isDigit,
-    autocorrect: isDigit,
+    obscureText: false,
+    enableSuggestions: isDigit == true ? false : true,
+    autocorrect: isDigit == true ? false : true,
     cursorHeight: 20.0,
-    cursorColor: Colors.white,
+    cursorColor: Colors.black54,
     validator: (value){
       if (value == null || value.isEmpty) {
         return 'Please enter your $text';
       }
       return null;
     },
-    style: TextStyle(color: Colors.white.withOpacity(0.9)),
+    style: TextStyle(color: Colors.black.withOpacity(0.9)),
     decoration: InputDecoration(
       prefixIcon: Icon(
         icon,
-        color: Colors.white70,
+        color: Colors.blueGrey,
       ),
       suffixText: unit,
       suffixStyle: const TextStyle(
-          color: Colors.white70, fontWeight: FontWeight.bold),
+          color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 16.0, height: 1.0),
       labelText: text,
-      labelStyle: const TextStyle(color: Colors.white70),
+      labelStyle: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600,fontSize: 16.0, height: 1.0),
       filled: true,
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.white, width: 1)),
+          borderSide: const BorderSide(color: Colors.blue, width: 3)),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       floatingLabelStyle:
-          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      fillColor: Colors.black.withOpacity(0.2),
+          const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
+      fillColor: Colors.white.withOpacity(0.3),
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(20.0),
           borderSide: BorderSide(
-              width: 0,
+              width: 3,
               style: BorderStyle.solid,
-              color: Colors.black.withOpacity(0.3))),
+              color: Colors.blue.withOpacity(0.5))),
     ),
-    keyboardType: isDigit ? TextInputType.number : TextInputType.text,
+    keyboardType: isDigit ? TextInputType.phone : TextInputType.text,
   );
 }
 
@@ -57,37 +103,39 @@ TextFormField otherField(String text, IconData icon, bool isPassword,
   return TextFormField(
     controller: controller,
     obscureText: isPassword,
-    enableSuggestions: isPassword,
-    autocorrect: isPassword,
+    enableSuggestions: isPassword == true ? false : true,
+    autocorrect: isPassword == true ? false : true,
     cursorHeight: 20.0,
-    cursorColor: Colors.white,
+    cursorColor: Colors.black,
     validator: (value){
       if (value == null || value.isEmpty) {
         return 'Please enter your $text';
       }
       return null;
     },
-    style: TextStyle(color: Colors.white.withOpacity(0.9)),
+    style: TextStyle(color: Colors.black.withOpacity(0.9), fontSize: 16.0, fontWeight: FontWeight.w600, height: 1.0),
     decoration: InputDecoration(
       prefixIcon: Icon(
         icon,
-        color: Colors.white70,
+        color: Colors.blueGrey,
       ),
       labelText: text,
-      labelStyle: const TextStyle(color: Colors.white70),
+      labelStyle: TextStyle(color: Colors.black.withOpacity(0.3),  fontSize: 16.0, height: 1.0),
       filled: true,
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(color: Colors.white, width: 1)),
+        gapPadding: 1.0,
+          borderRadius: BorderRadius.circular(20.0),
+          borderSide: BorderSide(color: Colors.blue.withOpacity(0.9),style: BorderStyle.solid, width: 3)),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
-      floatingLabelStyle: const TextStyle(color: Colors.white),
-      fillColor: Colors.black.withOpacity(0.2),
+      floatingLabelStyle: const TextStyle(color: Colors.black54),
+      fillColor: Colors.white.withOpacity(0.3),
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
+        gapPadding: 1.0,
+          borderRadius: BorderRadius.circular(20.0),
           borderSide: BorderSide(
-              width: 0,
+              width: 3,
               style: BorderStyle.solid,
-              color: Colors.black.withOpacity(0.1))),
+              color: Colors.blue.withOpacity(0.9))),
     ),
     keyboardType:
         isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
@@ -95,36 +143,36 @@ TextFormField otherField(String text, IconData icon, bool isPassword,
 }
 
 LayoutBuilder normalField(
-    String hint, bool isDigit, TextEditingController controller) {
+    String hint, bool isDigit, TextEditingController controller, Icon icon, Function() function) {
   return LayoutBuilder(
     builder: (context , constraints ) {
-      return TextField(
+      return TextFormField(
+        textCapitalization: isDigit == true ? TextCapitalization.none : TextCapitalization.sentences,
       controller: controller,
-      obscureText: isDigit,
-      enableSuggestions: isDigit,
-      autocorrect: isDigit,
+      enableSuggestions: isDigit == true ? false : true,
+      autocorrect: isDigit == true ? false : true,
       cursorColor: Colors.black,
+      cursorHeight: 25.0,
       style: TextStyle(color: Colors.black.withOpacity(0.9), fontSize: getFontSize(constraints.maxHeight)),
       maxLines: null,
       decoration: InputDecoration(
+        suffixIcon: IconButton(color: Colors.grey, onPressed: function, icon: icon,),
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.black26, fontSize: 16.0),
-        filled: true,
+        hintStyle: const TextStyle(color: Colors.black26, fontSize: 13.0),
+        filled: false,
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0),
-            borderSide: const BorderSide(color: Colors.white, width: 0)),
+            borderSide: const BorderSide(color: Colors.blue, width: 2, style: BorderStyle.solid)),
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        floatingLabelStyle:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         fillColor: Colors.black.withOpacity(0.1),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0),
             borderSide: BorderSide(
-                width: 0,
+                width: 2,
                 style: BorderStyle.solid,
-                color: Colors.blueGrey.withOpacity(0.1))),
+                color: Colors.black.withOpacity(0.1))),
       ),
-      keyboardType: isDigit ? TextInputType.number : TextInputType.text,
+      keyboardType: isDigit == true ? TextInputType.number : TextInputType.text,
     );
     }
   );
@@ -156,16 +204,16 @@ Container loginSignUpButton(
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
-              return Colors.black26;
+              return Colors.blueGrey;
             }
-            return Colors.white;
+            return Colors.green;
           }),
           shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
       child: Text(
         isLogin ? 'Log In' : 'Sign Up',
         style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+            color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 16),
       ),
     ),
   );
@@ -194,43 +242,6 @@ Container normalButton(BuildContext context, String text, Function onTap) {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
       child: Text(
         text,
-        style: const TextStyle(
-            color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
-      ),
-    ),
-  );
-}
-
-// ignore: non_constant_identifier_names, non_constant_identifier_names
-///This can be used if you want custom but similar login or signup buttons throughout the app.
-///You can edit it as desired.
-Container GoogleSignUpButton(
-    BuildContext context, IconData icons, bool isGoogle, Function onTap) {
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: 50,
-    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
-    child: ElevatedButton.icon(
-      onPressed: () {
-        onTap();
-      },
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith((states) {
-            if (states.contains(MaterialState.pressed)) {
-              return Colors.black26;
-            }
-            return Colors.white;
-          }),
-          shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-      icon: Icon(
-        icons,
-        color: Colors.green,
-        size: 30.0,
-      ),
-      label: Text(
-        isGoogle ? 'Sign In With Google' : 'Sign In With Microsoft',
         style: const TextStyle(
             color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
       ),
@@ -272,82 +283,66 @@ Container newChatButton(
   );
 }
 
+// ignore: non_constant_identifier_names, non_constant_identifier_names
+///This can be used if you want custom but similar login or signup buttons throughout the app.
+///You can edit it as desired.
+Container GoogleSignUpButton(
+    BuildContext context, IconData icons, bool isGoogle, Function onTap) {
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    height: 50,
+    margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(90)),
+    child: ElevatedButton.icon(
+      onPressed: () {
+        onTap();
+      },
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors.blueGrey;
+            }
+            return Colors.green;
+          }),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
+      icon: Icon(
+        icons,
+        color: Colors.white,
+        size: 30.0,
+      ),
+      label: Text(
+        isGoogle ? 'Sign In With Google' : 'Sign In With Microsoft',
+        style: const TextStyle(
+            color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+    ),
+  );
+}
+
 Widget botChat(String message, int data, context) {
   double w = MediaQuery.of(context).size.width;
   double h = MediaQuery.of(context).size.height;
   return Padding(
     padding: data == 0 ? const EdgeInsets.only(bottom: 5.0, right: 15.0) : const EdgeInsets.only(bottom: 5.0, left: 15.0),
     child: ChatBubble(
-        backGroundColor: data == 0 ? Colors.indigo : Colors.blueGrey,
+        backGroundColor: data == 0 ? Colors.green.shade900 : Colors.black87,
         clipper: data == 0
-            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 5.0)
-            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 5.0),
+            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 15.0)
+            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 15.0),
         elevation: 3.0,
         alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
         child: Padding(
           padding: EdgeInsets.zero,
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
             children: <Widget>[
               CircleAvatar(
-                radius: 15.0,
+                radius: 22.0,
                 backgroundColor: Colors.white,
-                backgroundImage: AssetImage(data == 0
-                    ? "assets/images/bot.png"
-                    : "assets/images/user.png"),
-              ),
-              const SizedBox(
-                width: 5.0,
-              ),
-              Flexible(
-                child: Text(
-                    message,
-                    style: TextStyle(
-                        fontSize: h * 0.02,
-                        color: Colors.white, fontWeight: FontWeight.normal),
-                  ),
-              ),
-              Padding(
-                padding: EdgeInsets.zero,
-                child: IconButton(
-                    onPressed: (){},
-                    icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_up, color: Colors.white, size: 15.0,)),
-              ),
-              Padding(
-                padding: EdgeInsets.zero,
-                child: IconButton(
-                    onPressed: (){},
-                    icon: data == 1 ? const Icon(null) : const Icon(Icons.thumb_down, color: Colors.white, size: 15.0,)),
-              )
-            ],
-          ),
-        )),
-  );
-}
-
-Widget docChat(String message, int data, context) {
-  double w = MediaQuery.of(context).size.width;
-  double h = MediaQuery.of(context).size.height;
-  return Padding(
-    padding: data == 0 ? const EdgeInsets.only(bottom: 5.0, right: 15.0) : const EdgeInsets.only(bottom: 5.0, left: 15.0),
-    child: ChatBubble(
-        backGroundColor: data == 0 ? Colors.indigo : Colors.blueGrey,
-        clipper: data == 0
-            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 5.0)
-            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 5.0),
-        elevation: 3.0,
-        alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
-        child: Padding(
-          padding: EdgeInsets.zero,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
-            children: <Widget>[
-              CircleAvatar(
-                radius: 15.0,
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage(data == 0
+                foregroundImage: AssetImage(data == 0
                     ? "assets/images/bot.png"
                     : "assets/images/user.png"),
               ),
@@ -358,12 +353,152 @@ Widget docChat(String message, int data, context) {
                 child: Text(
                   message,
                   style: TextStyle(
-                      fontSize: h * 0.02,
+                      fontSize: w * 0.04,
                       color: Colors.white, fontWeight: FontWeight.normal),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: data == 0 ? IconButton(
+                    onPressed: (){},
+                    icon: const Icon(Icons.thumb_up, color: Colors.white, size: 18.0,)) : const SizedBox(),
+              ),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: data == 0 ? IconButton(
+                    onPressed: (){},
+                    icon: const Icon(Icons.thumb_down, color: Colors.white, size: 18.0,)) : const SizedBox(),
               )
             ],
           ),
         )),
+  );
+}
+
+Widget userChatBubble(String message, int data, context, String? messageType, ImageProvider userPic) {
+  double w = MediaQuery.of(context).size.width;
+  double h = MediaQuery.of(context).size.height;
+  if(messageType == 'text' || messageType == null){
+    return Padding(
+      padding: data == 0 ? const EdgeInsets.only(bottom: 5.0, right: 15.0) : const EdgeInsets.only(bottom: 5.0, left: 15.0),
+      child: ChatBubble(
+          backGroundColor: data == 0 ? Colors.black87 : Colors.green.shade900,
+          clipper: data == 0
+              ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 5.0)
+              : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 5.0),
+          elevation: 3.0,
+          alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.zero,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: data == 0 ? MainAxisAlignment.start : MainAxisAlignment.end,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                        fontSize: h * 0.02,
+                        color: Colors.white, fontWeight: FontWeight.normal),
+                  ),
+                )
+              ],
+            ),
+          )),
+    );
+  }else if(messageType == 'audio'){
+    return Padding(
+      padding: data == 0 ? EdgeInsets.only(top: 5.0, bottom: 5.0, right: w * 0.1) : EdgeInsets.only(top: 5.0, bottom: 5.0, left: w * 0.07),
+      child: ChatBubble(
+        backGroundColor: data == 0 ? Colors.black87 : Colors.green.shade900,
+        clipper: data == 0
+            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 15.0)
+            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 15.0),
+        elevation: 3.0,
+        alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+          child: AudioWidget(
+            audioUrl: message,
+          ),
+        ),
+      ),
+    );
+  }else if(messageType == 'video'){
+    return Padding(
+      padding: data == 0 ? EdgeInsets.only(top: 5.0, bottom: 5.0, right: w * 0.1) : EdgeInsets.only(top: 5.0, bottom: 5.0),
+      child: ChatBubble(
+        backGroundColor: data == 0 ? Colors.black87 : Colors.green.shade900,
+        clipper: data == 0
+            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 15.0)
+            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 15.0),
+        elevation: 3.0,
+        alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
+        child: Padding(
+          padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: w*0.01),
+          child: SizedBox(
+            height: h *0.6,
+            width: w*0.8,
+            child: VideoPlayer(videoUrl: message)
+          ),
+        ),
+      ),
+    );
+  }else{
+    return Padding(
+      padding: data == 0 ? EdgeInsets.only(top: 5.0, bottom: 5.0, right: w * 0.1) : EdgeInsets.only(top: 5.0, bottom: 5.0, left: w * 0.09),
+      child: ChatBubble(
+        backGroundColor: data == 0 ? Colors.black87 : Colors.green.shade900,
+        clipper: data == 0
+            ? ChatBubbleClipper4(type: BubbleType.receiverBubble, radius: 15.0)
+            : ChatBubbleClipper4(type: BubbleType.sendBubble, radius: 15.0),
+        elevation: 3.0,
+        alignment: data == 0 ? Alignment.topLeft : Alignment.topRight,
+        child: SizedBox(
+          width: w * 0.5,
+          height: h * 0.3,
+          child: Image.network(message, fit: BoxFit.cover,),
+        ),
+      ),
+    );
+  }
+}
+
+Widget contentLoad(double height, double width, String text, String assetName){
+  return Container(
+    height: height,
+    width: width,
+    padding: const EdgeInsets.all(8.0),
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        fit: BoxFit.cover,
+          image: AssetImage(assetName)),
+      color: Colors.black.withOpacity(0.04),
+      borderRadius: const BorderRadius.all(Radius.circular(16)),
+    ),
+    child: Text(text),
+  );
+}
+
+Widget contentLoadingRow(){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      contentLoad(120, 120, '', ''),
+      const SizedBox(width: 10.0,),
+      Expanded(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          contentLoad(20, 120, '', ''),
+          const SizedBox(height: 10.0,),
+          contentLoad(20, 160, '', ''),
+          const SizedBox(height: 10.0,),
+          contentLoad(20, 200, '', ''),
+          const SizedBox(height: 10.0,),
+          contentLoad(20, 180, '', '')
+        ],
+      ))
+    ],
   );
 }

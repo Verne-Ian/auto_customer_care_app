@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -17,72 +16,9 @@ class _SignUpState extends State<SignUp> {
   TextEditingController nameControl = TextEditingController();
   TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
+  TextEditingController genderControl = TextEditingController();
+  TextEditingController contactControl = TextEditingController();
 
-  Future emailSignUp(String email, String password, String displayName) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        // Create Firebase user account with email and password
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-      
-        // Set the display name for the user
-        User? user = userCredential.user;
-        await user?.updateDisplayName(displayName);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                    title: const Text("Password is too weak!"),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("OK"),
-                      )
-                    ]);
-              });
-        } else if (e.code == 'email-already-in-use') {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                    title: const Text("The email is Already in Use!"),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("OK"),
-                      )
-                    ]);
-              });
-        }
-      } catch (e) {
-        print('Error creating Firebase account: $e');
-        // Handle error here
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                  title: const Text("Invalid Email Address!"),
-                  actions: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("OK"),
-                    )
-                  ]);
-            });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,25 +28,41 @@ class _SignUpState extends State<SignUp> {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints: BoxConstraints(maxWidth: w * 1.0),
+        constraints: BoxConstraints(maxWidth: w),
         child: Scaffold(
-          backgroundColor: Colors.blueGrey[900],
+          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
-              padding:
-                  EdgeInsets.fromLTRB(w * 0.0, h * 0.01, w * 0.0, h * 0.01),
+              padding: EdgeInsets.fromLTRB(w * 0.0, h * 0.1, w * 0.0, h * 0.01),
               child: Column(
                 children: [
-                  Container(
-                    width: w,
-                    height: h * 0.5,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          opacity: 0.9,
-                          image: AssetImage("assets/images/SpenCare.png"),
-                          fit: BoxFit.cover),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: w * 0.3,
+                        height: w * 0.3,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              opacity: 0.9,
+                              image: AssetImage("assets/images/hospital.png"),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                      const SizedBox(width: 10.0,),
+                      SizedBox(
+                        width: w*0.3,
+                        child: Text(
+                          "M & S General Clinic",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            height: 0.8,
+                              color: Colors.black54, fontSize: w * 0.065, fontFamily: 'DancingScript'),
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: w * 0.03, right: w * 0.03),
@@ -121,17 +73,26 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 10,
                           ),
-                          SizedBox(
-                            width: w * 0.8,
-                            height: h * 0.10,
-                            child: Text(
-                              "Welcome to SpenCare Support App, Create an Account with us and enjoy our Services.",
-                              style: TextStyle(
-                                  color: Colors.white70, fontSize: w * 0.036),
-                            ),
+                          Text(
+                            "Register Now",
+                            style: TextStyle(
+                                color: Colors.black54, fontSize: w * 0.09, fontFamily: 'DancingScript'),
+                          ),
+                          const SizedBox(
+                            height: 20,
                           ),
                           defaultField('Preferred Name', Ionicons.person, false,
                               nameControl, ''),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          defaultField('Gender', Ionicons.male_female_outline, false,
+                              genderControl, ''),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          defaultField('Phone Number', Icons.phone, true,
+                              contactControl, ''),
                           const SizedBox(
                             height: 10.0,
                           ),
@@ -140,21 +101,31 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 10.0,
                           ),
-                          otherField('Password', Icons.password_sharp, true,
+                          otherField('Password', Icons.lock, true,
                               passControl),
                           const SizedBox(
                             height: 10.0,
                           ),
                           loginSignUpButton(context, false, () async {
-                            await emailSignUp(emailControl.text, passControl.text,
-                                    nameControl.text);
+                            if(_formKey.currentState!.validate()){
+                              Login.createWithEmail(
+                                  nameControl,
+                                  emailControl,
+                                  passControl,
+                                  genderControl,
+                                  contactControl,
+                                  nameControl.text,
+                                  genderControl.text,
+                                  contactControl.text,
+                                  emailControl.text, passControl.text, context);
+                            }
                           }),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white70,
+                                  color: Colors.black54,
                                   height: 5.0,
                                   thickness: 2.0,
                                   indent: 15.0,
@@ -168,13 +139,13 @@ class _SignUpState extends State<SignUp> {
                                 child: Text(
                                   "OR",
                                   style: TextStyle(
-                                      color: Colors.white70,
+                                      color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Expanded(
                                 child: Divider(
-                                  color: Colors.white70,
+                                  color: Colors.black54,
                                   height: 5.0,
                                   thickness: 2.0,
                                   endIndent: 15.0,
@@ -186,7 +157,10 @@ class _SignUpState extends State<SignUp> {
                               () {
                             Login.googleLogin();
                           }),
-                          haveAccountOption()
+                          haveAccountOption(),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
                         ],
                       ),
                     ),
@@ -205,14 +179,14 @@ class _SignUpState extends State<SignUp> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text('Already have an Account?',
-            style: TextStyle(color: Colors.white70)),
+            style: TextStyle(color: Colors.black54)),
         GestureDetector(
           onTap: () {
             Navigator.pushReplacementNamed(context, '/login');
           },
           child: const Text(
             'Login Instead',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         )
       ],

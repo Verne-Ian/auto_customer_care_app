@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -88,19 +87,12 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
   @override
   Widget build(BuildContext context) {
 
-    final mediaQuery = MediaQuery.of(context);
-    final screenHeight = mediaQuery.size.height;
     final appBar = AppBar(
       title: const Text('Ambulance Request from',
           style: TextStyle(color: Colors.white),),
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.green,
       centerTitle: true,
     );
-    final formHeight = screenHeight -
-        appBar.preferredSize.height -
-        mediaQuery.padding.top -
-        mediaQuery.padding.bottom -
-        16.0;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -225,7 +217,7 @@ class _AmbulanceRequestPageState extends State<AmbulanceRequestPage> {
                                 if (states.contains(MaterialState.pressed)) {
                                   return Colors.black26;
                                 }
-                                return Colors.black54;
+                                return Colors.green;
                               }),
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),

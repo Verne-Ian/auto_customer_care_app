@@ -2,8 +2,6 @@ import 'package:auto_customer_care/addons/buttons&fields.dart';
 import 'package:flutter/material.dart';
 import 'package:dialogflow_flutter/googleAuth.dart';
 import 'package:dialogflow_flutter/dialogflowFlutter.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
@@ -27,10 +25,7 @@ class _BotChatState extends State<BotChat> {
 
   Future<void> _listen() async {
     if (!_speech.isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) => print('onStatus: $status'),
-        onError: (error) => print('onError: $error'),
-      );
+      bool available = await _speech.initialize();
       if (available) {
         bool _isListening;
         setState(() => _isListening = true);
@@ -176,9 +171,9 @@ class _BotChatState extends State<BotChat> {
                 children: <Widget>[
                   Flexible(
                       child:
-                          normalField('Add Message', false, messageInsert)),
+                          normalField('Add Message', false, messageInsert, const Icon(Icons.attach_file), (){})),
                   IconButton(
-                    icon: const Icon(Icons.mic, size: 25.0),
+                    icon: const Icon(Icons.mic, size: 25.0, color: Colors.green,),
                     onPressed: () async {
                       await _listen();
                     },
@@ -186,7 +181,7 @@ class _BotChatState extends State<BotChat> {
                   Container(
                     alignment: Alignment.center,
                     decoration: const BoxDecoration(
-                        color: Colors.black54, shape: BoxShape.circle),
+                        color: Colors.green, shape: BoxShape.circle),
                     child: IconButton(
                         icon: const Icon(
                           color: Colors.white,
@@ -195,7 +190,6 @@ class _BotChatState extends State<BotChat> {
                         ),
                         onPressed: () {
                           if (messageInsert.text.isEmpty) {
-                            print("empty message");
                           } else {
                             setState(() {
                               messages.insert(0,

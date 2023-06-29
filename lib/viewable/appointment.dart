@@ -1,7 +1,7 @@
+import 'package:auto_customer_care/services/MainServices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class AppointmentForm extends StatefulWidget {
   const AppointmentForm({Key? key}) : super(key: key);
@@ -13,7 +13,6 @@ class AppointmentForm extends StatefulWidget {
 class _AppointmentFormState extends State<AppointmentForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
@@ -78,24 +77,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (picked != null) {
-      setState(() {
-        final DateFormat formatter = DateFormat('EEEE, MMMM d, yyyy');
-        final String formattedDate = formatter.format(picked);
-        setState(() {
-          _dateController.text = formattedDate;
-        });
-      });
-    }
-  }
-
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -115,7 +96,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Make Appointment'),
-        backgroundColor: Colors.black54,
+        backgroundColor: Colors.green,
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
@@ -214,7 +195,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       const SizedBox(height: 16.0),
                       InkWell(
                         onTap: () {
-                          _selectDate(context);
+                          AllServices.selectDate(setState, context, _dateController);
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -267,7 +248,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               if (states.contains(MaterialState.pressed)) {
                                 return Colors.black26;
                               }
-                              return Colors.black54;
+                              return Colors.green;
                             }),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
